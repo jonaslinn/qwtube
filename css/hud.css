@@ -1,0 +1,17 @@
+.Hud{
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+	.Hud > .crosshair{
+		background-color: #f00; 
+		height: 2px;
+		left: 50%;
+		position: absolute;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 2px;
+	}

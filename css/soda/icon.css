@@ -1,0 +1,112 @@
+button{
+	cursor: pointer;
+	font-size: 1.4rem;
+	line-height: 3;
+	margin: .5em 1rem;
+	min-width: 7em;
+	outline: none;
+	padding: 0 1rem;
+}
+
+	button:disabled{
+		cursor: auto;
+	}
+
+.Icon{
+	display: inline-block;
+	height: 4.8rem;
+	line-height: 3.2;
+	margin: 0;
+	min-width: 0;
+	padding: 0;
+	vertical-align: middle;
+	width: 4.8rem;
+}
+
+	.Icon.s{
+		height: 2.4rem;
+		line-height: 1.8;
+		width: 2.4rem;
+	}
+
+	.Icon.m{
+		height: 3.2rem;
+		line-height: 2.4;
+		width: 3.2rem;			
+	}
+
+	.Icon.l{
+		height: 4rem;
+		line-height: 3.2;
+		width: 4rem;			
+	}
+
+		.Icon > svg{
+			transform: scale(1);
+		}
+
+	.Icon.padded{
+		padding: .4rem;
+	}
+
+
+	button.Icon{
+		background-color: transparent;
+		outline: none;
+	}
+
+/* colors & customization */
+
+	
+
+button{
+	background-color: #0abc7e;
+	color: #ebf7f3;
+	text-transform: lowercase;
+	transition: all .5s;
+}
+
+	button:hover{
+		background-color: #0ceb9d;
+	}
+
+	button:disabled{
+		background-color: #2e2e2e;
+		color: #5e5e5e;
+		cursor: auto;
+	}
+
+	button.negative{
+		background-color: #ed4f48;
+	}
+
+	button.negative:hover{
+		background-color: #ff554c;
+	}
+
+	.Icon{
+		fill: #ebf7f3;
+		stroke: #ebf7f3;
+	}
+
+	.Icon.negative{
+		fill: #ed4f48;
+		stroke: #ed4f48;
+	}
+
+	button.Icon:hover,
+	button.Icon:active,
+	button.Icon:focus{
+		fill: #0dffaa;
+		stroke: #0dffaa;
+	}
+
+	button.Icon:focus > svg{
+		animation: button_focus_pulse .6s infinite alternate;
+		ansimation-direction: alternate;
+	}
+
+	@keyframes button_focus_pulse {
+		0%   { transform: scale(1); }
+		100% { transform: scale(1.2); }
+	}

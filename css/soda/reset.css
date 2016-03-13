@@ -1,0 +1,18 @@
+/* Soda Reset */
+*{box-sizing:inherit}
+a,mark{color:inherit}
+a,abbr{text-decoration:none}
+abbr,button,fieldset,img,hr,table{border:0}
+address,b,button,caption,cite,code,dfn,em,h1,h2,h3,h4,h5,h6,i,input,pre,select,small,strong,sub,sup,textarea,th,var{font:inherit}
+article,footer,header,main,nav,section{display:block}
+blockquote,body,button,dd,div,dl,dt,fieldset,figure,form,h1,h2,h3,h4,h5,h6,hr,input,legend,li,ol,p,pre,td,textarea,th,ul{margin:0;padding:0}
+button::-moz-focus-inner{border:0;padding:0}
+button,mark{background:none}
+canvas,iframe,img,svg,video{max-width:100%}
+html{box-sizing:border-box;font-size:62.5%;text-align:center}
+ol,ul{list-style:none}
+sup,sub{line-height:0}
+svg{max-height:100%}
+table{border-collapse:collapse;border-spacing:0}
+template{display:none}
+textarea{resize:vertical}

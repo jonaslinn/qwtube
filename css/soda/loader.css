@@ -1,0 +1,72 @@
+	.Loader{
+		bottom: 0;
+		left: 0;
+		opacity: 1;
+		position: absolute;
+		right: 0;
+		top: 0;
+		visibility: visible;
+		z-index: 999;
+		transition: all 2s cubic-bezier(.4,0,.2,1);
+		will-change: transform;
+	}
+
+		.Loader:after{
+			border-radius: 50%;
+			border: 1px solid;
+			bottom: 2em;
+			content: '';
+			height: 3em;
+			position: absolute;
+			right: 2em;
+			width: 3em;
+			z-index: 1000;
+			-webkit-animation: Loader .9s infinite linear;
+			animation: Loader .9s infinite linear;
+		}
+	
+	.Loader.done{
+		opacity: 0;
+		transition: all 1s cubic-bezier(.4,0,.2,1);
+		visibility: hidden;
+	}
+
+		.Loader > div{
+			height: 2px;
+			left: 0;
+			position: absolute;
+			top: 0;
+			transform-origin: left top;
+			transition: transform 1s cubic-bezier(.4,0,.2,1);
+			right: 0;
+		}
+	
+	@-webkit-keyframes Loader {
+		from {-webkit-transform: rotateZ(1deg);}
+		to {-webkit-transform: rotateZ(360deg);}
+	}
+
+	@keyframes Loader {
+		from {transform: rotateZ(1deg);}
+		to {transform: rotateZ(360deg);}
+	}
+
+	/* colors */
+
+
+	 /*overlay*/ 
+	.Loader { 
+		background: rgba(30,30,30,.3);
+	}
+	
+	 /*spinner*/
+	.Loader:after {  
+		border-bottom-color: #eb246a;
+		border-left-color: #eb246a;
+		border-right-color: transparent;
+		border-top-color: transparent;
+	}
+	 /*progressbar*/
+	.Loader > div {  
+		background-color: #eb246a;
+	}

@@ -1,0 +1,41 @@
+.Message{
+	background: #30606b;
+	color: #fff;
+	margin: 1em auto;
+	max-width: 20%;
+	overflow: hidden;
+	padding: 1em;
+	position: relative;
+}
+
+	.Message > p{
+		font-size: 1.4em;
+		line-height: 1.5em;
+		padding: .7em;
+		text-align: center;
+	}
+
+	.Message > .Icon{
+		float: left;
+	}
+
+		.Message > .Icon.l + p{
+			margin-left: 4rem;
+			text-align: left;
+		}
+
+	.Message.error{
+		background: #d1443f;
+	}
+
+	.Message.info{
+		background: #30606b;
+	}
+
+	.Message.warning{
+		background: #9e1847;
+	}
+
+	.Message.success{
+		background: #0bd18c;
+	}

@@ -1,0 +1,169 @@
+/* Columns */
+
+.Columns{
+	box-sizing: border-box;
+}
+
+	.Columns:after{
+		clear: both;
+		content: '';
+		display: table;
+	}
+
+	.Columns > *{
+		box-sizing: border-box;
+		float: left;
+		margin: 0;
+	}
+
+	.Columns.padded > *,
+	.Columns > .padded{
+		padding: 3em;
+	}
+
+	.Columns.padded > .notpadded{
+		padding: 0;
+	}
+
+	.Columns.inverted > *,
+	.Columns > .right{
+		float: right;
+	}
+
+	.Columns.halfs > *{
+		width: 50%;
+	}
+	
+	.Columns.thirds > *{
+		width: 33.333%;
+	}
+
+		.Columns.thirds > .two{
+			width: 66.667%;
+		}
+
+	.Columns.quarters > *{
+		width: 25%;
+	}
+
+		.Columns.quarters > .two{
+			width: 50%;
+		}
+
+		.Columns.quarters > .three{
+			width: 75%;
+		}
+
+	.Columns.fifths > *{
+		width: 20%;
+	}
+
+		.Columns.fifths > .two{
+			width: 40%;
+		}
+
+		.Columns.fifths > .three{
+			width: 60%;
+		}
+
+		.Columns.fifths > .four{
+			width: 80%;
+		}
+
+	.Columns > .full{
+		width: 100%;
+	}
+
+	.Columns > .Columns{
+		box-sizing: content-box;
+		padding: 0;
+	}
+
+	.Columns > .clear{
+		clear: both;
+	}
+
+	.Columns.centered > *,
+	.Columns > .centered{
+		clear: both;
+		display: block;
+		float: none;
+		margin: 0 auto;
+	}
+
+/* Soda Fixed Width Items; Sizes origin from 10px base 960px width iPad landscape width*/
+
+	.Columns.fixed > *{
+		display: inline-block;
+		float: none;
+		vertical-align: top;
+	}
+	
+	/* quarters are standard */
+	.Columns.fixed > *{ 
+		width: 24em;
+	}
+
+	.Columns.fixed > .full{
+		width: 96em;
+	}
+
+	.Columns.fixed.halfs > *{
+		width: 48em;
+	}
+
+	.Columns.fixed.thirds > *{
+		width: 32em;
+	}
+
+		.Columns.fixed.thirds > .two{
+			width: 64em;
+		}
+
+	.Columns.fixed.quarters > *{
+		width: 24em;
+	}
+
+		.Columns.fixed.quarters > .two{
+			width: 48em;
+		}
+
+		.Columns.fixed.quarters > .three{
+			width: 72em;
+		}
+
+	.Columns.fixed.fifths > *{
+		width: 19.2em;
+	}
+
+		.Columns.fixed.fifths > .two{
+			width: 38.4em;
+		}
+
+		.Columns.fixed.fifths > .three{
+			width: 57.6em;
+		}
+
+		.Columns.fixed.fifths > .four{
+			width: 76.8em;
+		}
+
+	.Columns.fixed.sixths > *{
+		width: 16em;
+	}
+
+		.Columns.fixed.sixths > .two{
+			width: 32em;
+		}
+
+		.Columns.fixed.sixths > .three{
+			width: 48em;
+		}
+
+		.Columns.fixed.sixths > .four{
+			width: 64em;
+		}
+
+		.Columns.fixed.sixths > .five{
+			width: 80em;
+		}
