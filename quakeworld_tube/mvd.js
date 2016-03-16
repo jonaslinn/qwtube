@@ -107,7 +107,7 @@ QuakeWorldTube.mvd = function(commandParser)
 
 				try
 				{
-					console.log('CMD: ' + cmd);
+					//console.log('CMD: ' + cmd);
 					message = commandParser[cmd](mvd);
 					if(message)
 					{

@@ -42,13 +42,9 @@ QuakeWorldTube.renderer = function(container)
 
 	    updateCameraPosition = function(coords)
 	    {
-	    	camera.position.x = coords.position.x;
-			camera.position.y = coords.position.y;
-			camera.position.z = coords.position.z + 16; /* move the camera from the belly button to the eyes */
+	    	camera.position.set(coords.position.x, coords.position.y, coords.position.z + 16); /* move the camera from the belly button to the eyes */
 
-			camera.rotation.x = coords.rotation.x;
-			camera.rotation.z = coords.rotation.y;
-			camera.rotation.y = coords.rotation.z;
+	    	camera.rotation.setFromVector3(coords.rotation, 'ZXY');
 	    };
 
 	try

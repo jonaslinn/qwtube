@@ -3,9 +3,12 @@
 QuakeWorldTube.qw = function(qwTube)
 {
 	var baseline = [],
-	    entityDeltas = [],
+	    entityDeltaPrevious = [],
+	    entityDeltaNext = [],
 	    entities = [],
 	    activePlayer = 0,
+
+	    prevItem = new THREE.Vector3(),
 
 	    cube = new THREE.BoxGeometry(28, 28, 28),
 
@@ -17,21 +20,69 @@ QuakeWorldTube.qw = function(qwTube)
 
 		updateEntityDelta = function(entityId, data, timestamp)
 		{
-			entityDeltas[entityId] = data;
+			var next = {
+					position: new THREE.Vector3( 0, 0, 0 ),
+					rotation: new THREE.Vector3( 0, 0, 0 ),
+					remove: data.remove ? data.remove : false,
+					timestamp: timestamp
+				},
+				previous = {
+					position: new THREE.Vector3( 0, 0, 0 ),
+					rotation: new THREE.Vector3( 0, 0, 0 ),
+					remove: data.remove ? data.remove : false,
+					timestamp: timestamp
+				};
 
-			entityDeltas[entityId].timestamp = timestamp;
+			if (entityDeltaNext[entityId])
+			{
+				next.position.copy(entityDeltaNext[entityId].position);
+				next.rotation.copy(entityDeltaNext[entityId].rotation);
+			}
+
+			next.position.setX(data.position.x ? data.position.x : next.position.x);
+			next.position.setY(data.position.y ? data.position.y : next.position.y);
+			next.position.setZ(data.position.z ? data.position.z : next.position.z);
+
+			next.rotation.setX(data.rotation.x ? data.rotation.x : next.rotation.x);
+			next.rotation.setY(data.rotation.y ? data.rotation.y : next.rotation.y);
+			next.rotation.setZ(data.rotation.z ? data.rotation.z : next.rotation.z);
+
+
+			if (!entityDeltaPrevious[entityId])
+			{
+				previous.position.copy(next.position);
+				previous.rotation.copy(next.rotation);
+
+				entityDeltaPrevious[entityId] = previous;
+			}
+			else
+			{
+				previous.position.copy(entityDeltaNext[entityId].position);
+				previous.rotation.copy(entityDeltaNext[entityId].rotation);
+				previous.timestamp = entityDeltaNext[entityId].timestamp;
+				previous.remove = entityDeltaNext[entityId].remove;
+
+				entityDeltaPrevious[entityId] = previous;
+			}
+
+			delete entityDeltaNext[entityId];
+			entityDeltaNext[entityId] = next;
+
 		},
+
 
 		updateEntities = function(time, previousTime)
 		{
-			entityDeltas.forEach(function(entity, entityId){
+			entityDeltaPrevious.forEach(function(entity, entityId){
 
-				if (entity.remove && entity.timestamp <= time)
+				if (entityDeltaNext[entityId].remove && entityDeltaNext[entityId].timestamp <= time)
 				{
-					//qwTube.renderer.scene.remove(entities[entityId]);
-					delete entityDeltas[entityId];
-					delete entities[entityId];
 					qwTube.renderer.scene.remove(entities[entityId]);
+
+					delete entityDeltaPrevious[entityId];
+					delete entityDeltaNext[entityId];
+					delete entities[entityId];
+
 					return true;
 				}
 
@@ -39,19 +90,17 @@ QuakeWorldTube.qw = function(qwTube)
 				{
 					if (entities[entityId])
 					{
-						//qwTube.renderer.scene.remove(entities[entityId]);
-						delete entityDeltas[entityId];
+						qwTube.renderer.scene.remove(entities[entityId]);
+
+						delete entityDeltaPrevious[entityId];
+						delete entityDeltaNext[entityId];
 						delete entities[entityId];
 					}
 
 					entities[entityId] = new THREE.Mesh(cube, new THREE.MeshNormalMaterial());
-					entities[entityId].position.x = entity.position.x ? entity.position.x : entities[entityId].position.x;
-					entities[entityId].position.y = entity.position.y ? entity.position.y : entities[entityId].position.y;
-					entities[entityId].position.z = entity.position.z ? entity.position.z : entities[entityId].position.z;
 
-					entities[entityId].rotation.x = entity.rotation.x ? entity.rotation.x : entities[entityId].rotation.x;
-					entities[entityId].rotation.y = entity.rotation.y ? entity.rotation.y : entities[entityId].rotation.y;
-					entities[entityId].rotation.z = entity.rotation.z ? entity.rotation.z : entities[entityId].rotation.z;
+					entities[entityId].position.set(entity.position.x, entity.position.y, entity.position.z);
+					entities[entityId].rotation.setFromVector3(entity.rotation);
 
 					qwTube.renderer.scene.add(entities[entityId]);
 					return true;
@@ -62,13 +111,8 @@ QuakeWorldTube.qw = function(qwTube)
 					//entities[entityId] = baseline[entityId].clone();
 					entities[entityId] = new THREE.Mesh(cube, new THREE.MeshNormalMaterial());
 
-					entities[entityId].position.x = entity.position.x ? entity.position.x : entities[entityId].position.x;
-					entities[entityId].position.y = entity.position.y ? entity.position.y : entities[entityId].position.y;
-					entities[entityId].position.z = entity.position.z ? entity.position.z : entities[entityId].position.z;
-
-					entities[entityId].rotation.x = entity.rotation.x ? entity.rotation.x : entities[entityId].rotation.x;
-					entities[entityId].rotation.y = entity.rotation.y ? entity.rotation.y : entities[entityId].rotation.y;
-					entities[entityId].rotation.z = entity.rotation.z ? entity.rotation.z : entities[entityId].rotation.z;
+					entities[entityId].position.set(entity.position.x, entity.position.y, entity.position.z);
+					entities[entityId].rotation.setFromVector3(entity.rotation);
 
 					if(activePlayer != entityId)
 					{
@@ -85,59 +129,37 @@ QuakeWorldTube.qw = function(qwTube)
 				if(qwTube.demo.lerp)
 				{
 
-					var delta = (time - previousTime) / (entity.timestamp - previousTime);
-					console.log(delta);
+					var delta = (time - entityDeltaNext[entityId].timestamp) / (entity.timestamp - entityDeltaNext[entityId].timestamp);
 
-					//lerp your ass off
-					if(entity.position.x)
-					{
-						entities[entityId].position.x = (1 - delta) * entities[entityId].position.x + (delta * entity.position.x);
-					}
-					if(entity.position.y)
-					{
-						entities[entityId].position.y = (1 - delta) * entities[entityId].position.y + (delta * entity.position.y);
-					}
-					if(entity.position.z)
-					{
-						entities[entityId].position.z = (1 - delta) * entities[entityId].position.z + (delta * entity.position.z);
-					}
+					entities[entityId].position.lerpVectors(entityDeltaNext[entityId].position, entity.position, delta);
 
-					if(entity.rotation.x)
-					{
-						entities[entityId].rotation.x = (1 - delta) * entities[entityId].rotation.x + (delta * entity.rotation.x);
-					}
-					if(entity.rotation.y)
-					{
-						entities[entityId].rotation.y = (1 - delta) * entities[entityId].rotation.y + (delta * entity.rotation.y);
-					}
-					if(entity.rotation.z)
-					{
-						entities[entityId].rotation.z = (1 - delta) * entities[entityId].rotation.z + (delta * entity.rotation.z);
-					}
+					var bla = new THREE.Vector3();
 
+					entities[entityId].rotation.setFromVector3(bla.lerpVectors(entityDeltaNext[entityId].rotation, entity.rotation, delta));
 				}
 				else
 				{
 
-					entities[entityId].position.x = entity.position.x ? entity.position.x : entities[entityId].position.x;
-					entities[entityId].position.y = entity.position.y ? entity.position.y : entities[entityId].position.y;
-					entities[entityId].position.z = entity.position.z ? entity.position.z : entities[entityId].position.z;
+					entities[entityId].position.set(entity.position.x, entity.position.y, entity.position.z);
+					entities[entityId].rotation.setFromVector3(entity.rotation);
 
-					entities[entityId].rotation.x = entity.rotation.x ? entity.rotation.x : entities[entityId].rotation.x;
-					entities[entityId].rotation.y = entity.rotation.y ? entity.rotation.y : entities[entityId].rotation.y;
-					entities[entityId].rotation.z = entity.rotation.z ? entity.rotation.z : entities[entityId].rotation.z;
+				}
+
+				if(entityDeltaNext[entityId].timestamp < time)
+				{
+					delete entityDeltaPrevious[entityId];
+					delete entityDeltaNext[entityId];
 				}
 
 				
-				//console.log(entity, entityId, time);
 			});
 		},
 
 		getPlayerCoords = function()
 		{
 			return {
-				position: entities[activePlayer].position,
-				rotation: entities[activePlayer].rotation
+				position: entities[activePlayer].position.clone(),
+				rotation: entities[activePlayer].rotation.clone()
 			}
 		};
 
