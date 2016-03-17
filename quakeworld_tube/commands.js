@@ -398,10 +398,7 @@ QuakeWorldTube.commands = function(qwTube)
 
 		if(userInfo.length)
 		{
-			return {
-				'playerId': playerId,
-				'userInfo': userInfo
-			};
+			qwTube.qw.respawn(playerId, userInfo);
 		}
 	}
 
@@ -501,7 +498,7 @@ QuakeWorldTube.commands = function(qwTube)
 			mvd.msg_size--;
 		}
 
-		qwTube.qw.updateEntityDelta(playerId, coords, mvd.demotime);
+		qwTube.qw.updateEntityCoords( playerId, coords );
 	}
 
 	commands[SVC_CHOKECOUNT] = function(mvd)
@@ -527,7 +524,7 @@ QuakeWorldTube.commands = function(qwTube)
 		mvd.offset += 2;
 		mvd.msg_size -= 2;
 
-		return modelList;
+		qwTube.assets.fillModelList(modelList);
 	}
 
 	commands[SVC_SOUNDLIST] = function(mvd)
@@ -573,12 +570,7 @@ QuakeWorldTube.commands = function(qwTube)
 			entityId = tmp & 0x1ff;
 			tmp &= ~0x1ff;
 
-			/*if (entity[id] == null && baseline[id] != null)
-			{
-				entity[id] = baseline[id].clone();
-
-				scene.add(entity[id]);
-			}*/
+			qwTube.qw.spawnFromBaseline(entityId);
 
 			if (tmp & U_MOREBITS)
 			{
@@ -590,12 +582,12 @@ QuakeWorldTube.commands = function(qwTube)
 
 			if (tmp & U_REMOVE)
 			{
-				coords.remove = true;
+				qwTube.qw.removeEntity( entityId );
 			}
 			
 			if (tmp & U_MODEL)
 			{
-				coords.modelId = mvd.buffer.getUint8(mvd.offset);
+				qwTube.qw.spawnEntity( entityId, mvd.buffer.getUint8(mvd.offset) );
 
 				mvd.offset++;
 				mvd.msg_size--;
@@ -604,7 +596,7 @@ QuakeWorldTube.commands = function(qwTube)
 
 			if (tmp & U_FRAME)
 			{
-				coords.frame = mvd.buffer.getUint8(mvd.offset);
+				mvd.buffer.getUint8(mvd.offset);
 				mvd.offset++;
 				mvd.msg_size--;
 			}
@@ -677,7 +669,7 @@ QuakeWorldTube.commands = function(qwTube)
 				mvd.msg_size--;
 			}
 
-			qwTube.qw.updateEntityDelta(entityId, coords, mvd.demotime)
+			qwTube.qw.updateEntityCoords(entityId, coords)
 		}
 	}
 

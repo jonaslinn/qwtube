@@ -18,12 +18,17 @@ QuakeWorldTube.assets = function(options)
 		models = [],
 		sounds = [],
 
+		fillModelList = function(modelList)
+		{
+			modelsToLoad = modelsToLoad.concat(modelList);
+		},
+
 		loadModels = function()
 		{
 
-			var loadedBytesPerModel = new Array(modelList.length),
+			var loadedBytesPerModel = new Array(modelsToLoad.length),
 				loadedModels = 0,
-				totalBytesPerModel = new Array(modelList.length),
+				totalBytesPerModel = new Array(modelsToLoad.length),
 				totalModels = 0,
 
 				cube = new THREE.BoxGeometry(28, 28, 28),
@@ -40,7 +45,7 @@ QuakeWorldTube.assets = function(options)
 				{
 					if(loadedModels == totalModels)
 					{
-						console.log(models);
+						//console.log(models);
 						options.onLoad();
 					}
 				},
@@ -81,11 +86,14 @@ QuakeWorldTube.assets = function(options)
 					loader.load(path + modelName + '.obj', onLoad, onProgress, onError);
 				};
 
-				
+			if(modelsToLoad.length < 1)
+			{
+				return;
+			}
 
-			modelList.forEach(function(modelName, index){
+			modelsToLoad.forEach(function(modelName, index){
 
-				index++;
+				index++; // Index starts at 1
 
 				if(modelName.charAt(0) == 'v') // viewmodels are skipped, maybe later
 				{
@@ -98,7 +106,7 @@ QuakeWorldTube.assets = function(options)
 				{
 					if(modelName.charAt(0) == '*') // moveable map parts
 					{
-						modelName = modelList[1] + '_' + modelName.substr(1);
+						modelName = modelsToLoad[1] + '_' + modelName.substr(1);
 					}
 
 					loadModel(index, modelName, options.mapPath);
@@ -127,6 +135,8 @@ QuakeWorldTube.assets = function(options)
 	return {
 		models: models,
 		sounds: sounds,
+
+		fillModelList: fillModelList,
 
 		loadModels: loadModels
 	}

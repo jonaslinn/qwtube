@@ -3,8 +3,6 @@
 QuakeWorldTube.qw = function(qwTube)
 {
 	var baseline = [],
-	    entityDeltaPrevious = [],
-	    entityDeltaNext = [],
 	    entities = [],
 	    activePlayer = 0,
 
@@ -15,160 +13,201 @@ QuakeWorldTube.qw = function(qwTube)
 		spawnBaseline = function(baselineId, modelId, coords)
 		{
 			//baseline[baselineId] = new THREE.Mesh(qwTube.assets.models[modelId].geometry, qwTube.assets.models[modelId].material);
-			baseline[baselineId] = new THREE.Mesh(cube, new THREE.MeshNormalMaterial());
+			console.log(baselineId, modelId);
+			var object = new THREE.Object3D();
+	
+			object.modelId = modelId;
+		
+			object.position_base = new THREE.Vector3( coords.position.x, coords.position.y, coords.position.z );
+			object.rotation_base = new THREE.Vector3( coords.rotation.x, coords.rotation.y, coords.rotation.z );
+			
+			
+			baseline[baselineId] = object;
 		},
 
-		updateEntityDelta = function(entityId, data, timestamp)
+		updateBaseline = function(models)
 		{
-			var next = {
-					position: new THREE.Vector3( 0, 0, 0 ),
-					rotation: new THREE.Vector3( 0, 0, 0 ),
-					remove: data.remove ? data.remove : false,
-					timestamp: timestamp
-				},
-				previous = {
-					position: new THREE.Vector3( 0, 0, 0 ),
-					rotation: new THREE.Vector3( 0, 0, 0 ),
-					remove: data.remove ? data.remove : false,
-					timestamp: timestamp
-				};
+			baseline.forEach(function(item){
+				console.log(item);
+				if(!models[item.modelId])
+				{
+					return true;
+				}
+				item.name = models[item.modelId].name;
+				models[item.modelId].children.forEach(function(mesh){
+					item.add(new THREE.Mesh(mesh.geometry, mesh.material))
+				});
+			});
+		},
 
-			if (entityDeltaNext[entityId])
+		spawnMap = function()
+		{
+			qwTube.renderer.scene.add(qwTube.assets.models[1]);
+		},
+
+		respawn = function( playerId, userInfo)
+		{
+			console.log(playerId);
+			qwTube.renderer.scene.remove(entities[playerId]);
+
+			entities[playerId] = baseline[playerId];
+			entities[playerId].position_curr = new THREE.Vector3();
+			entities[playerId].rotation_curr = new THREE.Vector3();
+			entities[playerId].position_prev = new THREE.Vector3();
+			entities[playerId].rotation_prev = new THREE.Vector3();
+
+			if( activePlayer == playerId )
 			{
-				next.position.copy(entityDeltaNext[entityId].position);
-				next.rotation.copy(entityDeltaNext[entityId].rotation);
+				//return;
+			}
+			qwTube.renderer.scene.add(entities[playerId]);
+		},
+
+		spawnFromBaseline = function( entityId )
+		{
+			if( entities[entityId] || !baseline[entityId] )
+			{
+				return;
 			}
 
-			next.position.setX(data.position.x ? data.position.x : next.position.x);
-			next.position.setY(data.position.y ? data.position.y : next.position.y);
-			next.position.setZ(data.position.z ? data.position.z : next.position.z);
+			entities[entityId] = baseline[entityId].clone();
 
-			next.rotation.setX(data.rotation.x ? data.rotation.x : next.rotation.x);
-			next.rotation.setY(data.rotation.y ? data.rotation.y : next.rotation.y);
-			next.rotation.setZ(data.rotation.z ? data.rotation.z : next.rotation.z);
+			entities[entityId].position_curr = new THREE.Vector3();
+			entities[entityId].rotation_curr = new THREE.Vector3();
+
+			entities[entityId].position_curr.copy(baseline[entityId].position_base);
+			entities[entityId].rotation_curr.copy(baseline[entityId].rotation_base);
+
+			entities[entityId].position_prev = entities[entityId].position_curr.clone();
+			entities[entityId].rotation_prev = entities[entityId].rotation_curr.clone();
 
 
-			if (!entityDeltaPrevious[entityId])
-			{
-				previous.position.copy(next.position);
-				previous.rotation.copy(next.rotation);
-
-				entityDeltaPrevious[entityId] = previous;
-			}
-			else
-			{
-				previous.position.copy(entityDeltaNext[entityId].position);
-				previous.rotation.copy(entityDeltaNext[entityId].rotation);
-				previous.timestamp = entityDeltaNext[entityId].timestamp;
-				previous.remove = entityDeltaNext[entityId].remove;
-
-				entityDeltaPrevious[entityId] = previous;
-			}
-
-			delete entityDeltaNext[entityId];
-			entityDeltaNext[entityId] = next;
+			qwTube.renderer.scene.add(entities[entityId]);
 
 		},
 
-
-		updateEntities = function(time, previousTime)
+		spawnEntity = function( entityId, modelId )
 		{
-			entityDeltaPrevious.forEach(function(entity, entityId){
+			if ( entities[entityId] )
+			{
+				qwTube.renderer.scene.remove( entities[entityId] );
 
-				if (entityDeltaNext[entityId].remove && entityDeltaNext[entityId].timestamp <= time)
+				delete entities[entityId];
+			}
+
+			if ( !qwTube.assets.models[modelId] )
+			{
+				return; // fix
+			}
+
+			entities[entityId] = qwTube.assets.models[modelId].clone();
+
+			/*entities[entityId].position_curr = new THREE.Vector3( entity.position_curr.x, entity.position_curr.y, entity.position_curr.z );
+			entities[entityId].position_prev = entities[entityId].position_curr.clone();
+
+			entities[entityId].rotation_curr = new THREE.Vector3( entity.rotation_curr.x, entity.rotation_curr.y, entity.rotation_curr.z );
+			entities[entityId].rotation_prev = entities[entityId].rotation_curr.clone();*/
+
+			qwTube.renderer.scene.add( entities[entityId] );
+		},
+
+		removeEntity = function( entityId )
+		{
+			qwTube.renderer.scene.remove(entities[entityId]);
+
+			delete entities[entityId];
+		},
+
+		updateEntityCoords = function( entityId, coords )
+		{
+			if ( !entities[entityId] )
+			{
+				return;
+			}
+
+			if ( !entities[entityId].position_curr )
+			{
+				entities[entityId].position_curr = new THREE.Vector3();
+				entities[entityId].rotation_curr = new THREE.Vector3();
+			}
+
+			entities[entityId].position_curr.x = coords.position.x || entities[entityId].position_curr.x;
+			entities[entityId].position_curr.y = coords.position.y || entities[entityId].position_curr.y;
+			entities[entityId].position_curr.z = coords.position.z || entities[entityId].position_curr.z;
+
+			entities[entityId].rotation_curr.x = coords.position.x || entities[entityId].rotation_curr.x;
+			entities[entityId].rotation_curr.y = coords.position.y || entities[entityId].rotation_curr.y;
+			entities[entityId].rotation_curr.z = coords.position.z || entities[entityId].rotation_curr.z;
+
+			if ( !entities[entityId].position_prev )
+			{
+				entities[entityId].position_prev = entities[entityId].position_curr.clone();
+				entities[entityId].rotation_prev = entities[entityId].rotation_curr.clone();
+			}
+		},
+
+
+		updateEntities = function(fac)
+		{
+			console.log(fac);
+
+			entities.forEach(function( entity, entityId )
+			{
+
+				if(entityId == activePlayer)
 				{
-					qwTube.renderer.scene.remove(entities[entityId]);
-
-					delete entityDeltaPrevious[entityId];
-					delete entityDeltaNext[entityId];
-					delete entities[entityId];
-
-					return true;
+					console.log(entity.rotation_curr, entity.rotation_prev, entity.position_curr.distanceTo( entity.rotation_prev ));
 				}
 
-				if (entity.modelId && entity.timestamp <= time)
+				if ( entity.position_curr.distanceTo( entity.position_prev ) < 200 )
 				{
-					if (entities[entityId])
-					{
-						qwTube.renderer.scene.remove(entities[entityId]);
+					entities[entityId].position.lerpVectors( entity.position_prev, entity.position_curr, fac );
 
-						delete entityDeltaPrevious[entityId];
-						delete entityDeltaNext[entityId];
-						delete entities[entityId];
-					}
+					//var bla = new THREE.Vector3(); // ehhh
 
-					entities[entityId] = new THREE.Mesh(cube, new THREE.MeshNormalMaterial());
-
-					entities[entityId].position.set(entity.position.x, entity.position.y, entity.position.z);
-					entities[entityId].rotation.setFromVector3(entity.rotation);
-
-					qwTube.renderer.scene.add(entities[entityId]);
-					return true;
-				}
-
-				if (!entities[entityId] && baseline[entityId] && entity.timestamp <= time)
-				{
-					//entities[entityId] = baseline[entityId].clone();
-					entities[entityId] = new THREE.Mesh(cube, new THREE.MeshNormalMaterial());
-
-					entities[entityId].position.set(entity.position.x, entity.position.y, entity.position.z);
-					entities[entityId].rotation.setFromVector3(entity.rotation);
-
-					if(activePlayer != entityId)
-					{
-						qwTube.renderer.scene.add(entities[entityId]);
-					}
-					return true;
-				}
-
-				if(!entities[entityId])
-				{
-					return true;
-				}
-
-				if(qwTube.demo.lerp)
-				{
-
-					var delta = (time - entityDeltaNext[entityId].timestamp) / (entity.timestamp - entityDeltaNext[entityId].timestamp);
-
-					entities[entityId].position.lerpVectors(entityDeltaNext[entityId].position, entity.position, delta);
-
-					var bla = new THREE.Vector3();
-
-					entities[entityId].rotation.setFromVector3(bla.lerpVectors(entityDeltaNext[entityId].rotation, entity.rotation, delta));
+					//entities[entityId].rotation.setFromVector3( bla.lerpVectors(entity.rotation_prev, entity.rotation_curr, fac) );
+					entities[entityId].rotation.setFromVector3( entity.rotation_prev );
 				}
 				else
 				{
-
-					entities[entityId].position.set(entity.position.x, entity.position.y, entity.position.z);
-					entities[entityId].rotation.setFromVector3(entity.rotation);
-
-				}
-
-				if(entityDeltaNext[entityId].timestamp < time)
-				{
-					delete entityDeltaPrevious[entityId];
-					delete entityDeltaNext[entityId];
+					entities[entityId].position.copy( entity.position_prev );
+					entities[entityId].rotation.setFromVector3( entity.rotation_prev );
 				}
 
 				
 			});
 		},
 
+		moveEntities = function()
+		{
+			entities.forEach(function( entity )
+			{
+				entity.position_prev.copy(entity.position_curr);
+				entity.rotation_prev.copy(entity.rotation_curr);
+			});
+		},
+
 		getPlayerCoords = function()
 		{
 			return {
-				position: entities[activePlayer].position.clone(),
-				rotation: entities[activePlayer].rotation.clone()
+				position: entities[activePlayer].position,
+				rotation: entities[activePlayer].rotation
 			}
 		};
 
 		
 	return {
 		getPlayerCoords: getPlayerCoords,
+		moveEntities: moveEntities,
+		removeEntity: removeEntity,
+		respawn: respawn,
 		spawnBaseline: spawnBaseline,
-		updateEntityDelta: updateEntityDelta,
-		updateEntities: updateEntities
+		spawnEntity: spawnEntity,
+		spawnFromBaseline: spawnFromBaseline,
+		spawnMap: spawnMap,
+		updateBaseline: updateBaseline,
+		updateEntities: updateEntities,
+		updateEntityCoords: updateEntityCoords,
 	}
 
 }

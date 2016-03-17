@@ -1,11 +1,12 @@
 'use strict';
 
-QuakeWorldTube.mvd = function(commandParser)
+QuakeWorldTube.mvd = function(qwTube, commandParser)
 {
 	var mvd = {
 			arrayBuffer: null,
 			buffer: null,
-			demotime: 0,
+			time_curr: 0,
+			time_prev: 0,
 			offset: 0,
 
 			duration: 0,
@@ -39,12 +40,11 @@ QuakeWorldTube.mvd = function(commandParser)
 				cmd,
 
 
-				message = null,
-				messages = [];
+				message = null;
 
 			if(mvd.buffer == null)
 			{
-				return [];
+				return 0;
 			}
 
 			isParsing = true;
@@ -52,7 +52,13 @@ QuakeWorldTube.mvd = function(commandParser)
 			while(true)
 			{
 
-				if(mvd.offset == mvd.totalBytes)
+				if(isFailing)
+				{
+					console.log('Stopped parsing, due to mvd.isFailing.');
+					return;
+				}
+
+				if(mvd.offset >= mvd.totalBytes)
 				{
 					break;
 				}
@@ -64,13 +70,19 @@ QuakeWorldTube.mvd = function(commandParser)
 					msgDelta = mvd.buffer.getUint8(currentBytes);
 					type = mvd.buffer.getUint8(currentBytes + 1) & 0x07;
 
-					if(mvd.demotime - time > 40)
+					if(mvd.time_curr > time && msgDelta > 0)
 					{
-						console.log('nextframe', mvd.demotime);
+						console.log('nextframe', mvd.time_curr);
 						break;
 					}
 
-					mvd.demotime += msgDelta;
+					if ( msgDelta > 0 )
+					{
+						mvd.time_prev = mvd.time_curr;
+						qwTube.qw.moveEntities();
+					}
+
+					mvd.time_curr += msgDelta;
 
 					currentBytes += 2;
 
@@ -108,22 +120,14 @@ QuakeWorldTube.mvd = function(commandParser)
 				try
 				{
 					//console.log('CMD: ' + cmd);
-					message = commandParser[cmd](mvd);
-					if(message)
-					{
-						messages.push({
-							'cmd': cmd,
-							'data': message,
-							'time': mvd.demotime,
-						});
-					}
+					commandParser[cmd](mvd);
 				}
-				catch(error)
+				catch( error )
 				{
 					isFailing = true;
 					isParsing = false;
 
-					if(typeof commandParser[cmd] == 'function')
+					if( typeof commandParser[cmd] == 'function' )
 					{
 						console.log('Error in CMD: ' + cmd, error);
 					}
@@ -138,12 +142,11 @@ QuakeWorldTube.mvd = function(commandParser)
 
 			isParsing = false;
 
-			messages.push(mvd.demotime);
 
-			return messages;
+			return 1.0 - (mvd.time_curr - time) / (mvd.time_curr - mvd.time_prev);
 		},
 
-		parseGameData = function(options)
+		/*parseGameData = function(options)
 		{
 			var defaultOptions = {
 					'onComplete': function(){}
@@ -204,7 +207,7 @@ QuakeWorldTube.mvd = function(commandParser)
 					if(isFailing)
 					{
 						console.log('Stopped gathering gamedata, due to mvd.isFailing.');
-						return;
+						return false;
 					}
 
 					if(mvd.buffer == null)
@@ -315,7 +318,7 @@ QuakeWorldTube.mvd = function(commandParser)
 
 			parse();
 
-		},
+		},*/
 
 		getMVDDuration = function(options)
 		{
@@ -494,10 +497,10 @@ QuakeWorldTube.mvd = function(commandParser)
 	return {
 		getMVDDuration : getMVDDuration,
 		parseFrame     : parseFrame,
-		parseGameData  : parseGameData,
 		setDemoTime    : setDemoTime,
 		streamMVD      : streamMVD,
 
+		isFailing   : isFailing,
 		isParsing   : isParsing,
 		isStreaming : isStreaming,
 

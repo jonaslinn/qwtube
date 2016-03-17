@@ -1,7 +1,6 @@
 QuakeWorldTube.renderer = function(container)
 {
-	var canvas = document.createElement('canvas'),
-	    camera,
+	var camera,
 	    far = 2000,
 	    fov = 75,
 	    near = 1,
@@ -11,8 +10,8 @@ QuakeWorldTube.renderer = function(container)
 
 	    onResize = function()
 	    {
-	    	var height = canvas.parentNode.clientHeight * pixelRatio,
-	    		width  = canvas.parentNode.clientWidth * pixelRatio,
+	    	var height = renderer.domElement.parentNode.clientHeight * pixelRatio,
+	    		width  = renderer.domElement.parentNode.clientWidth * pixelRatio,
 
 	    		aspect = width / height;
 
@@ -30,7 +29,7 @@ QuakeWorldTube.renderer = function(container)
 
 	    shutdown = function()
 	    {
-	    	container.removeChild(canvas);
+	    	container.removeChild(renderer.domElement);
 	    	window.removeEventListener('resize', onResize);
 	    },
 
@@ -42,45 +41,35 @@ QuakeWorldTube.renderer = function(container)
 
 	    updateCameraPosition = function(coords)
 	    {
-	    	camera.position.set(coords.position.x, coords.position.y, coords.position.z + 16); /* move the camera from the belly button to the eyes */
+	    	/*camera.position.set(coords.position.x, coords.position.y, coords.position.z + 16);  move the camera from the belly button to the eyes 
 
-	    	camera.rotation.setFromVector3(coords.rotation, 'ZXY');
+	    	camera.rotation.copy(coords.rotation);*/
 	    };
 
-	try
-	{
-		container.appendChild(canvas);
-	}
-	catch(error)
-	{
-		console.log('Container does not exist.');
-		return false;
-	}
+	renderer = new THREE.WebGLRenderer();
 
-	try
-	{
-		renderer = new THREE.WebGLRenderer( {
-			canvas: canvas,
-			alpha: false,
-			antialias: true
-		});
-	}
-	catch (e)
-	{
-		console.log('WebGL error');	
-		return false;
-	}
 
-	THREE.Euler.DefaultOrder = 'ZXY';
+
+	//THREE.Euler.DefaultOrder = 'ZXY';
 
 	scene  = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera(fov, container.clientWidth / container.clientHeight, near, far);
 
-	onResize();
+	camera.position.z += 1000; // cam up down
+	camera.position.y += -600; // cam north south
+	camera.position.x += 500; // cam east west
+
+	camera.rotation.x += 0.00000002; // head up down
+	camera.rotation.y += 0.0; // head left right
+	camera.rotation.z += 0.0; // head tilt/rotate left right
 
 	scene.add(new THREE.AmbientLight(0xffffff));
 
 	window.addEventListener('resize', onResize);
+	
+	container.appendChild(renderer.domElement);
+
+	onResize();
 
 	return {
 		updateCameraPosition: updateCameraPosition,

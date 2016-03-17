@@ -31,7 +31,8 @@ QuakeWorldTube.init = function(container, url, options)
 		{
 			var messages = [],
 				message = null,
-				previousTimestamp = qwTube.demo.time;
+				previousTimestamp = qwTube.demo.time,
+				fac;
 
 			requestAnimationFrame(loop);
 
@@ -40,9 +41,9 @@ QuakeWorldTube.init = function(container, url, options)
 				return;
 			}
 
-			qwTube.mvd.parseFrame(qwTube.demo.time);
+			fac = qwTube.mvd.parseFrame(qwTube.demo.time);
 
-			qwTube.qw.updateEntities(qwTube.demo.time, previousTimestamp);
+			qwTube.qw.updateEntities(fac);
 
 			qwTube.renderer.updateCameraPosition(qwTube.qw.getPlayerCoords());
 
@@ -66,15 +67,23 @@ QuakeWorldTube.init = function(container, url, options)
 		assetsLoaded: false,
 		mapInitialized: false,
 		mapLoaded: false,
+		pauseForLoad: false,
 	};
 
 
-	this.assets = QuakeWorldTube.assets();
+	this.assets = QuakeWorldTube.assets({
+		'onLoad': function(){
+			qwTube.qw.updateBaseline(qwTube.assets.models);
+			qwTube.qw.spawnMap();
+			qwTube.flags.pauseForLoad = false;
+			//console.log(qwTube.flags);
+		}
+	});
 	this.commandParser = QuakeWorldTube.commands(this);
 	this.console = QuakeWorldTube.console.bind(this)(container);
 	this.controls = QuakeWorldTube.controls(container, this);
 	this.hud = QuakeWorldTube.hud(container);
-	this.mvd = QuakeWorldTube.mvd(this.commandParser);
+	this.mvd = QuakeWorldTube.mvd(this, this.commandParser);
 	this.qw = QuakeWorldTube.qw(this);
 	this.renderer = QuakeWorldTube.renderer(container);
 	this.stats = QuakeWorldTube.stats();
@@ -119,7 +128,7 @@ QuakeWorldTube.timer = function(demo, flags)
 
 		updateTime = function(timestamp)
 		{
-			if(demo.pause)
+			if(demo.pause || flags.pauseForLoad)
 			{
 				previousTimestamp = timestamp;
 				return false;
@@ -149,6 +158,8 @@ QuakeWorldTube.console = function(container)
 		{
 			if(!qwTube.flags.mapInitialized && string.substr(0, 5) == 'skins')
 			{
+				qwTube.flags.pauseForLoad = true;
+				qwTube.assets.loadModels();
 				console.log('Start the show!');
 				return;
 			}
