@@ -388,7 +388,7 @@ QuakeWorldTube.commands = function(qwTube)
 
 	commands[SVC_UPDATEUSERINFO] = function(mvd)
 	{
-		var playerId = mvd.buffer.getUint8(mvd.offset),
+		var playerId = mvd.buffer.getUint8(mvd.offset) + 1,
 			userInfo = '';
 				
 		mvd.offset += 5
@@ -407,7 +407,7 @@ QuakeWorldTube.commands = function(qwTube)
 	commands[SVC_PLAYERINFO] = function(mvd)
 	{
 		var tmp,
-			playerId = mvd.buffer.getUint8(mvd.offset),
+			playerId = mvd.buffer.getUint8(mvd.offset) + 1,
 			coords = {
 				'position': {},
 				'rotation': {}

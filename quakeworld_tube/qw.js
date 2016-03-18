@@ -4,7 +4,7 @@ QuakeWorldTube.qw = function(qwTube)
 {
 	var baseline = [],
 	    entities = [],
-	    activePlayer = 0,
+	    activePlayer = 1,
 
 	    prevItem = new THREE.Vector3(),
 
@@ -42,7 +42,7 @@ QuakeWorldTube.qw = function(qwTube)
 
 		spawnMap = function()
 		{
-			qwTube.renderer.scene.add(qwTube.assets.models[1]);
+			//qwTube.renderer.scene.add(qwTube.assets.models[1]);
 		},
 
 		respawn = function( playerId, userInfo)
