@@ -51,6 +51,7 @@
 				<option value=".1">.1</option>
 				<option value=".25">.25</option>
 				<option value=".5">.5</option>
+				<option value=".75">.75</option>
 				<option value="1" selected>1</option>
 				<option value="1.5">1.5</option>
 				<option value="2">2</option>

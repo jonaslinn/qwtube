@@ -452,7 +452,7 @@ QuakeWorldTube.commands = function(qwTube)
 		
 		if (tmp & DF_ANGLE1)
 		{
-			coords.rotation.x = Math.PI / 2 - (360 * mvd.buffer.getUint16(mvd.offset, true) / 65536) * Math.PI / 180;
+			coords.rotation.x = (360 * mvd.buffer.getUint16(mvd.offset, true) / 65536) * Math.PI / 180;
 			
 			mvd.offset += 2;
 			mvd.msg_size -= 2;
@@ -460,7 +460,7 @@ QuakeWorldTube.commands = function(qwTube)
 		
 		if (tmp & DF_ANGLE2)
 		{
-			coords.rotation.y = -Math.PI / 2 + (360 * mvd.buffer.getUint16(mvd.offset, true) / 65536) * Math.PI / 180;
+			coords.rotation.z = (360 * mvd.buffer.getUint16(mvd.offset, true) / 65536) * Math.PI / 180;
 			
 			mvd.offset += 2;
 			mvd.msg_size -= 2;
@@ -468,7 +468,7 @@ QuakeWorldTube.commands = function(qwTube)
 		
 		if (tmp & DF_ANGLE3)
 		{
-			coords.rotation.z = (360 * mvd.buffer.getUint16(mvd.offset, true) / 65536) * Math.PI / 180;
+			coords.rotation.y = (360 * mvd.buffer.getUint16(mvd.offset, true) / 65536) * Math.PI / 180;
 			
 			mvd.offset += 2;
 			mvd.msg_size -= 2;
@@ -647,7 +647,7 @@ QuakeWorldTube.commands = function(qwTube)
 
 			if (tmp & U_ANGLE2)
 			{
-				coords.rotation.y = (360 * mvd.buffer.getUint8(mvd.offset) / 256) * Math.PI / 180;
+				coords.rotation.z = (360 * mvd.buffer.getUint8(mvd.offset) / 256) * Math.PI / 180;
 
 				mvd.offset++;
 				mvd.msg_size--;
@@ -663,7 +663,7 @@ QuakeWorldTube.commands = function(qwTube)
 
 			if (tmp & U_ANGLE3)
 			{
-				coords.rotation.z = (360 * mvd.buffer.getUint8(mvd.offset) / 256) * Math.PI / 180;
+				coords.rotation.y = (360 * mvd.buffer.getUint8(mvd.offset) / 256) * Math.PI / 180;
 
 				mvd.offset++;
 				mvd.msg_size--;
