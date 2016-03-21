@@ -106,7 +106,7 @@ QuakeWorldTube.assets = function(options)
 				{
 					if(modelName.charAt(0) == '*') // moveable map parts
 					{
-						modelName = modelsToLoad[1] + '_' + modelName.substr(1);
+						modelName = modelsToLoad[0] + '_' + modelName.substr(1);
 					}
 
 					loadModel(index, modelName, options.mapPath);
@@ -116,6 +116,12 @@ QuakeWorldTube.assets = function(options)
 
 
 				if(modelName == 'player')
+				{
+					loadModel(index, modelName + '_0', options.modelPath);
+					return;
+				}
+
+				if(modelName == 'armor')
 				{
 					loadModel(index, modelName + '_0', options.modelPath);
 					return;

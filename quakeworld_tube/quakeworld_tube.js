@@ -190,7 +190,7 @@ QuakeWorldTube.controls = function(container, qwTube)
 		frameByFrameButton = document.getElementById('frameByFrame'),
 		playPauseButton = document.getElementById('playPause'),
 
-		lerpButton = document.getElementById('lerp'),
+		switchButton = document.getElementById('switch'),
 		speedSelect = document.getElementById('speed'),
 
 
@@ -200,9 +200,9 @@ QuakeWorldTube.controls = function(container, qwTube)
 			qwTube.demo.pause = false;
 		},
 
-		lerp = function()
+		switchPlayer = function()
 		{
-			qwTube.demo.lerp = qwTube.demo.lerp ? false : true;
+			qwTube.qw.switchPlayer();
 		},
 
 		playPause = function()
@@ -235,7 +235,7 @@ QuakeWorldTube.controls = function(container, qwTube)
 
 	frameByFrameButton.addEventListener('click', frameByFrame);
 	playPauseButton.addEventListener('click', playPause);
-	lerpButton.addEventListener('click', lerp);
+	switchButton.addEventListener('click', switchPlayer);
 	speedSelect.addEventListener('change', function(){
 		setSpeed(speedSelect.value);
 	});

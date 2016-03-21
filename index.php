@@ -44,7 +44,7 @@
 		</div>
 		<button id="playPause">Play/Pause</button>
 		<button id="frameByFrame">FrameByFrame</button>
-		<button id="lerp">lerp</button>
+		<button id="switch">next player</button>
 		<label>
 			Demo Speed
 			<select id="speed">

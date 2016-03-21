@@ -4,6 +4,7 @@ QuakeWorldTube.qw = function(qwTube)
 {
 	var baseline = [],
 	    entities = [],
+	    players = {},
 	    activePlayer = 1,
 
 	    prevItem = new THREE.Vector3(),
@@ -12,29 +13,29 @@ QuakeWorldTube.qw = function(qwTube)
 
 		spawnBaseline = function(baselineId, modelId, coords)
 		{
-			//baseline[baselineId] = new THREE.Mesh(qwTube.assets.models[modelId].geometry, qwTube.assets.models[modelId].material);
-			console.log(baselineId, modelId);
 			var object = new THREE.Object3D();
 	
 			object.modelId = modelId;
 		
 			object.position_base = new THREE.Vector3( coords.position.x, coords.position.y, coords.position.z );
-			object.rotation_base = new THREE.Vector3( coords.rotation.x, coords.rotation.y, coords.rotation.z );
-			
-			
+			object.rotation_base = new THREE.Euler( coords.rotation.x, coords.rotation.y, coords.rotation.z );
+
 			baseline[baselineId] = object;
 		},
 
 		updateBaseline = function(models)
 		{
-			baseline.forEach(function(item){
-				console.log(item);
-				if(!models[item.modelId])
+			baseline.forEach( function( item )
+			{
+				if ( !models[item.modelId] )
 				{
 					return true;
 				}
+
 				item.name = models[item.modelId].name;
-				models[item.modelId].children.forEach(function(mesh){
+
+				models[item.modelId].children.forEach( function( mesh )
+				{
 					item.add(new THREE.Mesh(mesh.geometry, mesh.material))
 				});
 			});
@@ -45,9 +46,39 @@ QuakeWorldTube.qw = function(qwTube)
 			qwTube.renderer.scene.add(qwTube.assets.models[1]);
 		},
 
-		respawn = function( playerId, userInfo)
+		spawnPlayer = function( playerId, userInfo )
 		{
-			console.log(playerId);
+
+			var userInfo = userInfo.split("\\");
+
+			players[playerId] = {};
+
+			for (var i = 1; i < userInfo.length; i += 2)
+			{
+
+				switch ( userInfo[i] )
+				{
+					case 'name':
+						players[playerId].name = userInfo[i + 1];
+						break;
+					case 'team':
+						players[playerId].team = userInfo[i + 1];
+						break;
+					case 'topcolor':
+						players[playerId].topcolor = userInfo[i + 1];
+						break;
+					case 'bottomcolor':
+						players[playerId].bottomcolor = userInfo[i + 1];
+						break;
+					case 'skin':
+						players[playerId].skin = userInfo[i + 1];
+						break;
+					case '*spectator':
+						players[playerId].spectator = true;
+						break;
+				}
+			};
+
 			qwTube.renderer.scene.remove(entities[playerId]);
 
 			entities[playerId] = baseline[playerId];
@@ -60,7 +91,31 @@ QuakeWorldTube.qw = function(qwTube)
 			{
 				return;
 			}
-			qwTube.renderer.scene.add(entities[playerId]);
+
+			qwTube.renderer.scene.add( entities[playerId] );
+		},
+
+		switchPlayer = function( playerId )
+		{
+			var playerId = playerId || activePlayer + 1;
+
+			while ( !players[playerId] || ( players[playerId] && players[playerId].spectator ) )
+			{
+				playerId++;
+				console.log(playerId);
+				if ( playerId > 31)
+				{
+					playerId = 1;
+				}
+			}
+
+			qwTube.renderer.scene.add( entities[activePlayer] );
+			qwTube.renderer.scene.remove( entities[playerId] );
+
+			activePlayer = playerId;
+
+			console.log('Now watching: ' + players[playerId].name);
+
 		},
 
 		spawnFromBaseline = function( entityId )
@@ -82,7 +137,7 @@ QuakeWorldTube.qw = function(qwTube)
 			entities[entityId].rotation_prev = entities[entityId].rotation_curr.clone();
 
 
-			qwTube.renderer.scene.add(entities[entityId]);
+			qwTube.renderer.scene.add( entities[entityId] );
 
 		},
 
@@ -102,11 +157,6 @@ QuakeWorldTube.qw = function(qwTube)
 
 			entities[entityId] = qwTube.assets.models[modelId].clone();
 
-			/*entities[entityId].position_curr = new THREE.Vector3( entity.position_curr.x, entity.position_curr.y, entity.position_curr.z );
-			entities[entityId].position_prev = entities[entityId].position_curr.clone();
-
-			entities[entityId].rotation_curr = new THREE.Vector3( entity.rotation_curr.x, entity.rotation_curr.y, entity.rotation_curr.z );
-			entities[entityId].rotation_prev = entities[entityId].rotation_curr.clone();*/
 
 			qwTube.renderer.scene.add( entities[entityId] );
 		},
@@ -197,11 +247,12 @@ QuakeWorldTube.qw = function(qwTube)
 		getPlayerCoords: getPlayerCoords,
 		moveEntities: moveEntities,
 		removeEntity: removeEntity,
-		respawn: respawn,
+		spawnPlayer: spawnPlayer,
 		spawnBaseline: spawnBaseline,
 		spawnEntity: spawnEntity,
 		spawnFromBaseline: spawnFromBaseline,
 		spawnMap: spawnMap,
+		switchPlayer: switchPlayer,
 		updateBaseline: updateBaseline,
 		updateEntities: updateEntities,
 		updateEntityCoords: updateEntityCoords,

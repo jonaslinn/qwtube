@@ -398,7 +398,7 @@ QuakeWorldTube.commands = function(qwTube)
 
 		if(userInfo.length)
 		{
-			qwTube.qw.respawn(playerId, userInfo);
+			qwTube.qw.spawnPlayer(playerId, userInfo);
 		}
 	}
 
