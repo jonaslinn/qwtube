@@ -29,7 +29,7 @@ QuakeWorldTube.assets = function(options)
 			var loadedBytesPerModel = new Array(modelsToLoad.length),
 				loadedModels = 0,
 				totalBytesPerModel = new Array(modelsToLoad.length),
-				totalModels = 0,
+				totalModels = modelsToLoad.length,
 
 				cube = new THREE.BoxGeometry(28, 28, 28),
 
@@ -56,6 +56,46 @@ QuakeWorldTube.assets = function(options)
 						onLoad = function(object)
 						{
 							object.name = modelName;
+
+							switch (object.name)
+							{
+								case 'b_batt0':
+								case 'b_batt1':
+								case 'b_bh10':
+								case 'b_bh100':
+								case 'b_bh25':
+								case 'b_nail0':
+								case 'b_nail1':
+								case 'b_rock0':
+								case 'b_rock1':
+								case 'b_shell0':
+								case 'b_shell1':
+									object.lerp = false;
+									break;
+								case 'armor_0':
+								case 'g_light':
+								case 'g_nail':
+								case 'g_nail2':
+								case 'g_rock':
+								case 'g_rock2':
+								case 'g_shot':
+								case 'invisibl':
+								case 'invulner':
+								case 'quaddama':
+									object.lerp = false;
+									object.hover = true;
+									break;
+								default:
+									object.lerp = true;
+									object.hover = false;
+									break;
+							}
+
+							if (modelIndex == 1) // map
+							{
+								object.lerp = false;
+							}
+
 							models[modelIndex] = object;
 
 							loadedModels++;
@@ -97,10 +137,9 @@ QuakeWorldTube.assets = function(options)
 
 				if(modelName.charAt(0) == 'v') // viewmodels are skipped, maybe later
 				{
+					totalModels--;
 					return;
 				}
-
-				totalModels++;
 				
 				if(index == 1 || modelName.charAt(0) == '*') // map
 				{

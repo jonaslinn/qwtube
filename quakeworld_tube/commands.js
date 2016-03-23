@@ -3,85 +3,85 @@
 QuakeWorldTube.commands = function(qwTube)
 {
 	var SVC_NOP                 =  1,
-	    SVC_DISCONNECT          =  2,
-	    SVC_UPDATESTAT          =  3,
-	    SVC_SETVIEW             =  5,
-	    SVC_SOUND               =  6,
-	    SVC_PRINT               =  8,
-	    SVC_STUFFTEXT           =  9,
-	    SVC_SETANGLE            = 10,
-	    SVC_SERVERDATA          = 11,
-	    SVC_LIGHTSTYLE          = 12,
-	    SVC_UPDATEFRAGS         = 14,
-	    SVC_STOPSOUND           = 16,
-	    SVC_DAMAGE              = 19,
-	    SVC_SPAWNSTATIC         = 20,
-	    SVC_SPAWNBASELINE       = 22,
-	    SVC_TEMP_ENTITY         = 23,
-	    SVC_SETPAUSE            = 24,
-	    SVC_CENTERPRINT         = 26,
-	    SVC_KILLEDMONSTER       = 27,
-	    SVC_FOUNDSECRET         = 28,
-	    SVC_SPAWNSTATICSOUND    = 29,
-	    SVC_INTERMISSION        = 30,
-	    SVC_FINALE              = 31,
-	    SVC_CDTRACK             = 32,
-	    SVC_SELLSCREEN          = 33,
-	    SVC_SMALLKICK           = 34,
-	    SVC_BIGKICK             = 35,
-	    SVC_UPDATEPING          = 36,
-	    SVC_UPDATEENTERTIME     = 37,
-	    SVC_UPDATESTATLONG      = 38,
-	    SVC_MUZZLEFLASH         = 39,
-	    SVC_UPDATEUSERINFO      = 40,
-	    SVC_DOWNLOAD            = 41,
-	    SVC_PLAYERINFO          = 42,
-	    SVC_CHOKECOUNT          = 44,
-	    SVC_MODELLIST           = 45,
-	    SVC_SOUNDLIST           = 46,
-	    SVC_PACKETENTITIES      = 47,
-	    SVC_DELTAPACKETENTITIES = 48,
-	    SVC_MAXSPEED            = 49,
-	    SVC_ENTGRAVITY          = 50,
-	    SVC_SETINFO             = 51,
-	    SVC_SERVERINFO          = 52,
-	    SVC_UPDATEPL            = 53,
-	    SVC_NAILS2              = 54,
+		SVC_DISCONNECT          =  2,
+		SVC_UPDATESTAT          =  3,
+		SVC_SETVIEW             =  5,
+		SVC_SOUND               =  6,
+		SVC_PRINT               =  8,
+		SVC_STUFFTEXT           =  9,
+		SVC_SETANGLE            = 10,
+		SVC_SERVERDATA          = 11,
+		SVC_LIGHTSTYLE          = 12,
+		SVC_UPDATEFRAGS         = 14,
+		SVC_STOPSOUND           = 16,
+		SVC_DAMAGE              = 19,
+		SVC_SPAWNSTATIC         = 20,
+		SVC_SPAWNBASELINE       = 22,
+		SVC_TEMP_ENTITY         = 23,
+		SVC_SETPAUSE            = 24,
+		SVC_CENTERPRINT         = 26,
+		SVC_KILLEDMONSTER       = 27,
+		SVC_FOUNDSECRET         = 28,
+		SVC_SPAWNSTATICSOUND    = 29,
+		SVC_INTERMISSION        = 30,
+		SVC_FINALE              = 31,
+		SVC_CDTRACK             = 32,
+		SVC_SELLSCREEN          = 33,
+		SVC_SMALLKICK           = 34,
+		SVC_BIGKICK             = 35,
+		SVC_UPDATEPING          = 36,
+		SVC_UPDATEENTERTIME     = 37,
+		SVC_UPDATESTATLONG      = 38,
+		SVC_MUZZLEFLASH         = 39,
+		SVC_UPDATEUSERINFO      = 40,
+		SVC_DOWNLOAD            = 41,
+		SVC_PLAYERINFO          = 42,
+		SVC_CHOKECOUNT          = 44,
+		SVC_MODELLIST           = 45,
+		SVC_SOUNDLIST           = 46,
+		SVC_PACKETENTITIES      = 47,
+		SVC_DELTAPACKETENTITIES = 48,
+		SVC_MAXSPEED            = 49,
+		SVC_ENTGRAVITY          = 50,
+		SVC_SETINFO             = 51,
+		SVC_SERVERINFO          = 52,
+		SVC_UPDATEPL            = 53,
+		SVC_NAILS2              = 54,
 
-	    DF_ORIGIN1     = (1 << 0),
-	    DF_ORIGIN2     = (1 << 1),
-	    DF_ORIGIN3     = (1 << 2),
-	    DF_ANGLE1      = (1 << 3),
-	    DF_ANGLE2      = (1 << 4),
-	    DF_ANGLE3      = (1 << 5),
-	    DF_EFFECTS     = (1 << 6),
-	    DF_SKINNUM     = (1 << 7),
-	    DF_WEAPONFRAME = (1 << 10),
-	    DF_MODEL       = (1 << 11),
+		DF_ORIGIN1     = (1 << 0),
+		DF_ORIGIN2     = (1 << 1),
+		DF_ORIGIN3     = (1 << 2),
+		DF_ANGLE1      = (1 << 3),
+		DF_ANGLE2      = (1 << 4),
+		DF_ANGLE3      = (1 << 5),
+		DF_EFFECTS     = (1 << 6),
+		DF_SKINNUM     = (1 << 7),
+		DF_WEAPONFRAME = (1 << 10),
+		DF_MODEL       = (1 << 11),
 
-	    U_ANGLE1   = (1 << 0),
-	    U_ANGLE3   = (1 << 1),
-	    U_MODEL    = (1 << 2),
-	    U_COLORMAP = (1 << 3),
-	    U_SKIN     = (1 << 4),
-	    U_EFFECTS  = (1 << 5),
-	    U_ORIGIN1  = (1 << 9),
-	    U_ORIGIN2  = (1 << 10),
-	    U_ORIGIN3  = (1 << 11),
-	    U_ANGLE2   = (1 << 12),
-	    U_FRAME    = (1 << 13),
-	    U_REMOVE   = (1 << 14),
-	    U_MOREBITS = (1 << 15),
+		U_ANGLE1   = (1 << 0),
+		U_ANGLE3   = (1 << 1),
+		U_MODEL    = (1 << 2),
+		U_COLORMAP = (1 << 3),
+		U_SKIN     = (1 << 4),
+		U_EFFECTS  = (1 << 5),
+		U_ORIGIN1  = (1 << 9),
+		U_ORIGIN2  = (1 << 10),
+		U_ORIGIN3  = (1 << 11),
+		U_ANGLE2   = (1 << 12),
+		U_FRAME    = (1 << 13),
+		U_REMOVE   = (1 << 14),
+		U_MOREBITS = (1 << 15),
 
-	    DEM_READ     = 1,
-	    DEM_SET      = 2,
-	    DEM_MULTIPLE = 3,
-	    DEM_SINGLE   = 4,
-	    DEM_STATS    = 5,
-	    DEM_ALL      = 6,
+		DEM_READ     = 1,
+		DEM_SET      = 2,
+		DEM_MULTIPLE = 3,
+		DEM_SINGLE   = 4,
+		DEM_STATS    = 5,
+		DEM_ALL      = 6,
 
 
-	    flush_string = function(mvd)
+		flush_string = function(mvd)
 		{
 			var string = '';
 
@@ -236,8 +236,50 @@ QuakeWorldTube.commands = function(qwTube)
 
 	commands[SVC_SPAWNSTATIC] = function(mvd)
 	{
-		mvd.offset += 13;
-		mvd.msg_size -= 13;
+		var modelId = mvd.buffer.getUint8(mvd.offset),
+			coords = {
+				position: {},
+				rotation: {}
+			};
+
+
+		mvd.offset++;
+		mvd.msg_size--;
+
+		mvd.offset += 3;
+		mvd.msg_size -= 3;
+
+		coords.position.x = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+		mvd.offset += 2;
+		mvd.msg_size -= 2;
+
+		coords.rotation.x = (360 * mvd.buffer.getUint8(mvd.offset) / 256) * Math.PI / 180;
+
+		mvd.offset++;
+		mvd.msg_size--;
+
+		coords.position.y = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+		mvd.offset += 2;
+		mvd.msg_size -= 2;
+
+		coords.rotation.y = (360 * mvd.buffer.getUint8(mvd.offset) / 256) * Math.PI / 180;
+
+		mvd.offset++;
+		mvd.msg_size--;
+
+		coords.position.z = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+		mvd.offset += 2;
+		mvd.msg_size -= 2;
+
+		coords.rotation.z = (360 * mvd.buffer.getUint8(mvd.offset) / 256) * Math.PI / 180;
+
+		mvd.offset++;
+		mvd.msg_size--;
+
+		qwTube.qw.spawnStatic(modelId, coords);
 	}
 
 	commands[SVC_SPAWNBASELINE] = function(mvd)
@@ -570,8 +612,6 @@ QuakeWorldTube.commands = function(qwTube)
 			entityId = tmp & 0x1ff;
 			tmp &= ~0x1ff;
 
-			qwTube.qw.spawnFromBaseline(entityId);
-
 			if (tmp & U_MOREBITS)
 			{
 				tmp |= mvd.buffer.getUint8(mvd.offset);
@@ -582,12 +622,12 @@ QuakeWorldTube.commands = function(qwTube)
 
 			if (tmp & U_REMOVE)
 			{
-				qwTube.qw.removeEntity( entityId );
+				qwTube.qw.removeEntity(entityId);
 			}
 			
 			if (tmp & U_MODEL)
 			{
-				qwTube.qw.spawnEntity( entityId, mvd.buffer.getUint8(mvd.offset) );
+				qwTube.qw.spawnEntity(entityId, mvd.buffer.getUint8(mvd.offset));
 
 				mvd.offset++;
 				mvd.msg_size--;

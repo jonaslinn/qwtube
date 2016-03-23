@@ -4,6 +4,7 @@ QuakeWorldTube.qw = function(qwTube)
 {
 	var baseline = [],
 	    entities = [],
+	    entitiesToUpdate = [],
 	    players = {},
 	    activePlayer = 1,
 
@@ -17,46 +18,61 @@ QuakeWorldTube.qw = function(qwTube)
 	
 			object.modelId = modelId;
 		
-			object.position_base = new THREE.Vector3( coords.position.x, coords.position.y, coords.position.z );
-			object.rotation_base = new THREE.Euler( coords.rotation.x, coords.rotation.y, coords.rotation.z );
+			object.position.copy(new THREE.Vector3(coords.position.x, coords.position.y, coords.position.z));
+			object.rotation.copy(new THREE.Euler(coords.rotation.x, coords.rotation.y, coords.rotation.z));
 
 			baseline[baselineId] = object;
 		},
 
 		updateBaseline = function(models)
 		{
-			baseline.forEach( function( item )
+			baseline.forEach( function(item, baselineId)
 			{
-				if ( !models[item.modelId] )
+
+				if (!models[item.modelId])
 				{
-					return true;
+					return true; // continue
 				}
 
 				item.name = models[item.modelId].name;
 
-				models[item.modelId].children.forEach( function( mesh )
+				item.lerp = models[item.modelId].lerp;
+				item.hover = models[item.modelId].hover;
+
+				models[item.modelId].children.forEach(function(mesh)
 				{
 					item.add(new THREE.Mesh(mesh.geometry, mesh.material))
 				});
+
+				if (item.name != 'player_0')
+				{
+					spawnFromBaseline(baselineId);
+				}
+
 			});
 		},
 
-		spawnMap = function()
+		spawnStatic = function(modelId, coords)
 		{
-			qwTube.renderer.scene.add(qwTube.assets.models[1]);
+			var object = new THREE.Mesh(cube, new THREE.MeshNormalMaterial());
+	
+			object.modelId = modelId;
+
+			object.position.copy(new THREE.Vector3( coords.position.x, coords.position.y, coords.position.z ));
+			object.rotation.copy(new THREE.Euler( coords.rotation.x, coords.rotation.y, coords.rotation.z ));
+
+			qwTube.renderer.scene.add(object);
 		},
 
-		spawnPlayer = function( playerId, userInfo )
+		spawnPlayer = function(playerId, userInfo)
 		{
-
 			var userInfo = userInfo.split("\\");
 
 			players[playerId] = {};
 
 			for (var i = 1; i < userInfo.length; i += 2)
 			{
-
-				switch ( userInfo[i] )
+				switch (userInfo[i])
 				{
 					case 'name':
 						players[playerId].name = userInfo[i + 1];
@@ -79,103 +95,108 @@ QuakeWorldTube.qw = function(qwTube)
 				}
 			};
 
-			qwTube.renderer.scene.remove(entities[playerId]);
-
 			entities[playerId] = baseline[playerId];
 			entities[playerId].position_curr = new THREE.Vector3();
 			entities[playerId].rotation_curr = new THREE.Euler();
 			entities[playerId].position_prev = new THREE.Vector3();
 			entities[playerId].rotation_prev = new THREE.Euler();
 
-			if( activePlayer == playerId )
+			if (activePlayer == playerId)
 			{
 				return;
 			}
 
-			qwTube.renderer.scene.add( entities[playerId] );
+			qwTube.renderer.scene.add(entities[playerId]);
 		},
 
-		switchPlayer = function( playerId )
+		switchPlayer = function(playerId)
 		{
 			var playerId = playerId || activePlayer + 1;
 
-			while ( !players[playerId] || ( players[playerId] && players[playerId].spectator ) )
+			while (!players[playerId] || (players[playerId] && players[playerId].spectator))
 			{
 				playerId++;
-				console.log(playerId);
-				if ( playerId > 31)
+				if (playerId > 31)
 				{
 					playerId = 1;
 				}
 			}
 
-			qwTube.renderer.scene.add( entities[activePlayer] );
-			qwTube.renderer.scene.remove( entities[playerId] );
+			qwTube.renderer.scene.add(entities[activePlayer]);
+			qwTube.renderer.scene.remove(entities[playerId]);
 
 			activePlayer = playerId;
 
 			console.log('Now watching: ' + players[playerId].name);
 
+			if (qwTube.demo.pause)
+			{
+				qwTube.renderer.updateCameraPosition(qwTube.qw.getPlayerCoords());
+				qwTube.renderer.render();
+			}
 		},
 
-		spawnFromBaseline = function( entityId )
+		spawnFromBaseline = function(entityId)
 		{
-			if( entities[entityId] || !baseline[entityId] )
+			if (entities[entityId] || !baseline[entityId])
 			{
 				return;
 			}
 
 			entities[entityId] = baseline[entityId].clone();
 
-			entities[entityId].position_curr = new THREE.Vector3();
-			entities[entityId].rotation_curr = new THREE.Euler();
+			entities[entityId].lerp = baseline[entityId].lerp;
+			entities[entityId].hover = baseline[entityId].hover;
 
-			entities[entityId].position_curr.copy(baseline[entityId].position_base);
-			entities[entityId].rotation_curr.copy(baseline[entityId].rotation_base);
+			if (entities[entityId].lerp)
+			{
+				entities[entityId].position_curr = baseline[entityId].position.clone();
+				entities[entityId].rotation_curr = baseline[entityId].rotation.clone();
 
-			entities[entityId].position_prev = entities[entityId].position_curr.clone();
-			entities[entityId].rotation_prev = entities[entityId].rotation_curr.clone();
+				entities[entityId].position_prev = baseline[entityId].position.clone();
+				entities[entityId].rotation_prev = baseline[entityId].rotation.clone();
+			}
 
-
-			qwTube.renderer.scene.add( entities[entityId] );
+			qwTube.renderer.scene.add(entities[entityId]);
 
 		},
 
-		spawnEntity = function( entityId, modelId )
+		spawnEntity = function(entityId, modelId)
 		{
-			if ( entities[entityId] )
+			if (entities[entityId])
 			{
-				qwTube.renderer.scene.remove( entities[entityId] );
+				qwTube.renderer.scene.remove(entities[entityId]);
 
 				delete entities[entityId];
 			}
 
-			if ( !qwTube.assets.models[modelId] )
+			if (!qwTube.assets.models[modelId])
 			{
 				return; // fix
 			}
 
 			entities[entityId] = qwTube.assets.models[modelId].clone();
 
+			entities[entityId].lerp = qwTube.assets.models[modelId].lerp;
 
-			qwTube.renderer.scene.add( entities[entityId] );
+			qwTube.renderer.scene.add(entities[entityId]);
 		},
 
-		removeEntity = function( entityId )
+		removeEntity = function(entityId)
 		{
 			qwTube.renderer.scene.remove(entities[entityId]);
 
 			delete entities[entityId];
 		},
 
-		updateEntityCoords = function( entityId, coords )
+		updateEntityCoords = function(entityId, coords)
 		{
-			if ( !entities[entityId] )
+			if (!entities[entityId] || entities[entityId].lerp == false)
 			{
 				return;
 			}
 
-			if ( !entities[entityId].position_curr )
+			if (!entities[entityId].position_curr)
 			{
 				entities[entityId].position_curr = new THREE.Vector3();
 				entities[entityId].rotation_curr = new THREE.Euler();
@@ -189,48 +210,62 @@ QuakeWorldTube.qw = function(qwTube)
 			entities[entityId].rotation_curr.y = coords.rotation.y || entities[entityId].rotation_curr.y;
 			entities[entityId].rotation_curr.z = coords.rotation.z || entities[entityId].rotation_curr.z;
 
-			if ( !entities[entityId].position_prev )
+			if (!entities[entityId].position_prev)
 			{
 				entities[entityId].position_prev = entities[entityId].position_curr.clone();
 				entities[entityId].rotation_prev = entities[entityId].rotation_curr.clone();
 			}
+
 		},
 
 
-		updateEntities = function( fac )
+		updateEntities = function(fac, time)
 		{
 			var prev = new THREE.Quaternion(),
-			    curr = new THREE.Quaternion();
+			    curr = new THREE.Quaternion(),
+			    entityId;
 
-			entities.forEach(function( entity, entityId )
+			entities.forEach(function(entity, entityId)
 			{
 
-
-				if ( entity.position_curr.distanceTo( entity.position_prev ) < 200 )
+				if (entity.lerp)
 				{
-					entities[entityId].position.lerpVectors( entity.position_prev, entity.position_curr, fac );
-	
-					prev.setFromEuler(entity.rotation_prev);
-					curr.setFromEuler(entity.rotation_curr);
-					
-					THREE.Quaternion.slerp( prev, curr, entity.quaternion, fac );
-				}
-				else
-				{
-					entities[entityId].position.copy( entity.position_prev );
-					entities[entityId].rotation.copy( entity.rotation_prev );
+
+					if (entities[entityId].position_curr.distanceTo(entities[entityId].position_prev) < 200)
+					{
+						entities[entityId].position.lerpVectors(entities[entityId].position_prev, entities[entityId].position_curr, fac);
+		
+						prev.setFromEuler(entities[entityId].rotation_prev);
+						curr.setFromEuler(entities[entityId].rotation_curr);
+						
+						THREE.Quaternion.slerp(prev, curr, entities[entityId].quaternion, fac);
+					}
+					else
+					{
+						entities[entityId].position.copy(entities[entityId].position_prev);
+						entities[entityId].rotation.copy(entities[entityId].rotation_prev);
+					}
+					return true;
 				}
 
-				
+				if (entity.hover)
+				{
+					entity.position.z += (0.25 * Math.sin(time * 0.005)) * qwTube.demo.speed;
+					entity.rotation.z += 0.0075 * qwTube.demo.speed;
+				}
 			});
+
 		},
 
 		moveEntities = function()
 		{
-			entities.forEach(function( entity )
+			entities.forEach(function(entity)
 			{
-				entity.position_prev.copy(entity.position_curr);
-				entity.rotation_prev.copy(entity.rotation_curr);
+				if (entity.lerp)
+				{
+					entity.position_prev.copy(entity.position_curr);
+					entity.rotation_prev.copy(entity.rotation_curr);
+				}
 			});
 		},
 
@@ -250,8 +285,8 @@ QuakeWorldTube.qw = function(qwTube)
 		spawnPlayer: spawnPlayer,
 		spawnBaseline: spawnBaseline,
 		spawnEntity: spawnEntity,
+		spawnStatic: spawnStatic,
 		spawnFromBaseline: spawnFromBaseline,
-		spawnMap: spawnMap,
 		switchPlayer: switchPlayer,
 		updateBaseline: updateBaseline,
 		updateEntities: updateEntities,

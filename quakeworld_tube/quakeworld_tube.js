@@ -43,9 +43,12 @@ QuakeWorldTube.init = function(container, url, options)
 
 			fac = qwTube.mvd.parseFrame(qwTube.demo.time);
 
-			qwTube.qw.updateEntities(fac);
+			qwTube.qw.updateEntities(fac, qwTube.demo.time);
 
+			//qwTube.qw.animateItems();
+			
 			qwTube.renderer.updateCameraPosition(qwTube.qw.getPlayerCoords());
+
 
 			qwTube.renderer.render();
 
@@ -74,7 +77,6 @@ QuakeWorldTube.init = function(container, url, options)
 	this.assets = QuakeWorldTube.assets({
 		'onLoad': function(){
 			qwTube.qw.updateBaseline(qwTube.assets.models);
-			qwTube.qw.spawnMap();
 			qwTube.flags.pauseForLoad = false;
 			//console.log(qwTube.flags);
 		}
