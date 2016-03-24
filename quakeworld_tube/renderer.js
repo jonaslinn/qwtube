@@ -5,8 +5,42 @@ QuakeWorldTube.renderer = function(container)
 	    fov = 75,
 	    near = 1,
 	    pixelRatio = window.devicePixelRatio,
+	    particleSystem,
 	    renderer,
 	    scene,
+
+	    particleOptions = {
+	    	'missile': {
+				color: 0xff0000,
+				colorRandomness: .1,
+				lifetime: 2000,
+				position: new THREE.Vector3(),
+				positionRandomness: 0,
+				size: 5,
+				sizeRandomness: 1,
+				turbulence: .1,
+				velocity: new THREE.Vector3(),
+				velocityRandomness: .01,
+			},
+			'grenade': {
+				color: 0xaa88ff,
+				colorRandomness: .2,
+				lifetime: 2,
+				position: new THREE.Vector3(),
+				positionRandomness: .3,
+				size: 5,
+				sizeRandomness: 1,
+				turbulence: .5,
+				velocity: new THREE.Vector3(),
+				velocityRandomness: .5,
+			},
+			'spawnerOptions': {
+				spawnRate: 100,
+				horizontalSpeed: 1.5,
+				verticalSpeed: 1.33,
+				timeScale: 1
+			}
+	    },
 
 	    onResize = function()
 	    {
@@ -20,6 +54,19 @@ QuakeWorldTube.renderer = function(container)
 
 	    	camera.aspect = aspect;
 	    	camera.updateProjectionMatrix();
+	    },
+
+	    fireParticles = function(type, position, delta)
+	    {
+	    	var options = particleOptions[type];
+
+	    	options.position.copy(position);
+
+	    	for (var x = 0; x < particleOptions.spawnerOptions.spawnRate; x++) {
+				// Yep, that's really it.	Spawning particles is super cheap, and once you spawn them, the rest of
+				// their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
+				particleSystem.spawnParticle(options);
+			}
 	    },
 
 	    render = function()
@@ -51,12 +98,16 @@ QuakeWorldTube.renderer = function(container)
 
 	renderer = new THREE.WebGLRenderer();
 
-
-
 	THREE.Euler.DefaultOrder = 'ZXY';
 
 	scene  = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera(fov, container.clientWidth / container.clientHeight, near, far);
+
+	particleSystem = new THREE.GPUParticleSystem({
+		maxParticles: 250000
+	});
+
+	scene.add(particleSystem);
 
 	scene.fog = new THREE.Fog( 0xffffff, 1, 5000 );
 	scene.fog.color.setHSL( 0.6, 0, 1 );
@@ -83,14 +134,6 @@ QuakeWorldTube.renderer = function(container)
 				dirLight.shadowCameraFar = 3500;
 				dirLight.shadowBias = -0.0001;
 
-	/*camera.position.z += 1000; // cam up down
-	camera.position.y += -600; // cam north south
-	camera.position.x += 500; // cam east west
-
-	camera.rotation.x += 0.00000002; // head up down
-	camera.rotation.y += 0.0; // head left right
-	camera.rotation.z += 0.0; // head tilt/rotate left right*/
-
 	//scene.add(new THREE.AmbientLight(0xffffff));
 
 	window.addEventListener('resize', onResize);
@@ -100,10 +143,12 @@ QuakeWorldTube.renderer = function(container)
 	onResize();
 
 	return {
+		render         : render,
+		scene          : scene,
+		setPixelRatio  : setPixelRatio,
+		particleSystem : particleSystem,
+		fireParticles  : fireParticles,
+		shutdown       : shutdown,
 		updateCameraPosition: updateCameraPosition,
-		render        : render,
-		scene         : scene,
-		setPixelRatio : setPixelRatio,
-		shutdown      : shutdown
 	}
 }

@@ -21,6 +21,8 @@ QuakeWorldTube.init = function(container, url, options)
 		},
 		options = core.mergeObjects(defaultOptions, options),
 
+		stats = new Stats(),
+
 		mvdLoader = new soda.loader(),
 
 		timer,
@@ -34,27 +36,38 @@ QuakeWorldTube.init = function(container, url, options)
 				previousTimestamp = qwTube.demo.time,
 				fac;
 
+			stats.begin();
+
 			requestAnimationFrame(loop);
 
 			if(!timer.updateTime(timestamp))
 			{
+				stats.end();
 				return;
 			}
 
 			fac = qwTube.mvd.parseFrame(qwTube.demo.time);
 
-			qwTube.qw.updateEntities(fac, qwTube.demo.time);
+			qwTube.qw.updateEntities(fac, qwTube.demo.time, qwTube.demo.time - previousTimestamp);
 
-			//qwTube.qw.animateItems();
-			
 			qwTube.renderer.updateCameraPosition(qwTube.qw.getPlayerCoords());
 
+			qwTube.renderer.particleSystem.update(qwTube.demo.time);
 
 			qwTube.renderer.render();
 
-			// update entities, players etc
-			
+			stats.end();
 		};
+
+	stats.setMode(0); // 0: fps, 1: ms, 2: mb
+
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.left = 0;
+	stats.domElement.style.top = 0;
+	stats.domElement.style.zIndex = 1;
+
+	container.appendChild(stats.domElement);
+
 
 		
 	this.demo = {

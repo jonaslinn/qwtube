@@ -175,6 +175,7 @@ QuakeWorldTube.qw = function(qwTube)
 				return; // fix
 			}
 
+
 			entities[entityId] = qwTube.assets.models[modelId].clone();
 
 			entities[entityId].lerp = qwTube.assets.models[modelId].lerp;
@@ -219,7 +220,7 @@ QuakeWorldTube.qw = function(qwTube)
 		},
 
 
-		updateEntities = function(fac, time)
+		updateEntities = function(fac, time, delta)
 		{
 			var prev = new THREE.Quaternion(),
 			    curr = new THREE.Quaternion(),
@@ -245,7 +246,12 @@ QuakeWorldTube.qw = function(qwTube)
 						entities[entityId].position.copy(entities[entityId].position_prev);
 						entities[entityId].rotation.copy(entities[entityId].rotation_prev);
 					}
-					return true;
+
+				
+					if (entity.name == 'missile')
+					{
+						qwTube.renderer.fireParticles('missile', entity.position, delta);
+					}
 				}
 
 				if (entity.hover)

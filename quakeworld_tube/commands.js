@@ -612,6 +612,8 @@ QuakeWorldTube.commands = function(qwTube)
 			entityId = tmp & 0x1ff;
 			tmp &= ~0x1ff;
 
+			qwTube.qw.spawnFromBaseline(entityId);
+
 			if (tmp & U_MOREBITS)
 			{
 				tmp |= mvd.buffer.getUint8(mvd.offset);
