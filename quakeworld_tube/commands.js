@@ -80,6 +80,21 @@ QuakeWorldTube.commands = function(qwTube)
 		DEM_STATS    = 5,
 		DEM_ALL      = 6,
 
+		TE_SPIKE          = 0,
+		TE_SUPERSPIKE     = 1,
+		TE_GUNSHOT        = 2,
+		TE_EXPLOSION      = 3,
+		TE_TAREXPLOSION   = 4,
+		TE_LIGHTNING1     = 5,
+		TE_LIGHTNING2     = 6,
+		TE_WIZSPIKE       = 7,
+		TE_KNIGHTSPIKE    = 8,
+		TE_LIGHTNING3     = 9,
+		TE_LAVASPLASH     = 10,
+		TE_TELEPORT       = 11,
+		TE_BLOOD          = 12,
+		TE_LIGHTNINGBLOOD = 13,
+
 
 		flush_string = function(mvd)
 		{
@@ -299,14 +314,6 @@ QuakeWorldTube.commands = function(qwTube)
 		mvd.offset++;
 		mvd.msg_size--;
 
-		//baseline[id] = new THREE.Mesh(models[tmp].geometry, models[tmp].material);
-
-		/* dafaq? */
-		/*if (id == 0)
-		{
-			scene.add(baseline[id]);
-		}*/
-
 		mvd.offset += 3;
 		mvd.msg_size -= 3;
 
@@ -345,19 +352,87 @@ QuakeWorldTube.commands = function(qwTube)
 
 	commands[SVC_TEMP_ENTITY] = function(mvd)
 	{
-		if (mvd.buffer.getUint8(mvd.offset) == 2 || mvd.buffer.getUint8(mvd.offset) == 12)
+		var tempEntity = mvd.buffer.getUint8(mvd.offset),
+			coords = {
+				position: {}
+			},
+			big = false;
+
+		mvd.offset++;
+		mvd.msg_size--;
+
+		if (tempEntity == TE_LIGHTNING1 || tempEntity == TE_LIGHTNING2 || tempEntity == TE_LIGHTNING3)
 		{
-			mvd.offset++;
-			mvd.msg_size--;
+			// entity type
+			mvd.buffer.getInt16(mvd.offset, true);
+
+			mvd.offset += 2;
+			mvd.msg_size -= 2;
+
+			// pos
+			coords.position.x = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+			mvd.offset += 2;
+			mvd.msg_size -= 2;
+
+			coords.position.y = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+			mvd.offset += 2;
+			mvd.msg_size -= 2;
+
+			coords.position.z = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+			mvd.offset += 2;
+			mvd.msg_size -= 2;
+
+			// origin pos
+			coords.origin = {};
+			coords.origin.x = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+			mvd.offset += 2;
+			mvd.msg_size -= 2;
+
+			coords.origin.y = mvd.getInt16(mvd.offset, true) / 8;
+
+			mvd.offset += 2;
+			mvd.msg_size -= 2;
+
+			coords.origin.z = mvd.buffer.getInt16(mvd.offset, true) / 8;
+			
+			mvd.offset += 2;
+			mvd.msg_size -= 2;
 		}
-		else if (mvd.buffer.getUint8(mvd.offset) == 5 || mvd.buffer.getUint8(mvd.offset) == 6 || mvd.buffer.getUint8(mvd.offset) == 7)
+		else
 		{
-			mvd.offset += 8;
-			mvd.msg_size -= 8;
+			if (tempEntity == TE_GUNSHOT || tempEntity == TE_BLOOD)
+			{
+				if (mvd.buffer.getInt8(mvd.offset) == 3)
+				{
+					big = true;
+				}
+				//big blood / big gunshot on 3?
+				mvd.offset++;
+				mvd.msg_size--;
+			}
+
+			// pos
+			coords.position.x = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+			mvd.offset += 2;
+			mvd.msg_size -= 2;
+
+			coords.position.y = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+			mvd.offset += 2;
+			mvd.msg_size -= 2;
+
+			coords.position.z = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+			mvd.offset += 2;
+			mvd.msg_size -= 2;
 		}
-		
-		mvd.offset += 7;
-		mvd.msg_size -= 7;
+
+		qwTube.qw.spawnTempEntity(tempEntity, coords, big);
 	}
 
 	commands[SVC_SETPAUSE] = function(){}
