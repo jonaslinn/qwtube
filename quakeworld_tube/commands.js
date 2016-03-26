@@ -392,7 +392,7 @@ QuakeWorldTube.commands = function(qwTube)
 			mvd.offset += 2;
 			mvd.msg_size -= 2;
 
-			coords.origin.y = mvd.getInt16(mvd.offset, true) / 8;
+			coords.origin.y = mvd.buffer.getInt16(mvd.offset, true) / 8;
 
 			mvd.offset += 2;
 			mvd.msg_size -= 2;
@@ -430,9 +430,10 @@ QuakeWorldTube.commands = function(qwTube)
 
 			mvd.offset += 2;
 			mvd.msg_size -= 2;
+			
+			qwTube.qw.spawnTempEntity(tempEntity, coords, big);
 		}
 
-		qwTube.qw.spawnTempEntity(tempEntity, coords, big);
 	}
 
 	commands[SVC_SETPAUSE] = function(){}
