@@ -5,7 +5,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd mmetal1_3.jpg
+map_Kd textures/mmetal1_3.jpg
 newmtl cop1_2
 Ka 1 1 1
 Kd 1 1 1
@@ -13,7 +13,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd cop1_2.jpg
+map_Kd textures/cop1_2.jpg
 newmtl metal1_6
 Ka 1 1 1
 Kd 1 1 1
@@ -21,7 +21,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal1_6.jpg
+map_Kd textures/metal1_6.jpg
 newmtl metal6_1
 Ka 1 1 1
 Kd 1 1 1
@@ -29,7 +29,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal6_1.jpg
+map_Kd textures/metal6_1.jpg
 newmtl metal1_4
 Ka 1 1 1
 Kd 1 1 1
@@ -37,7 +37,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal1_4.jpg
+map_Kd textures/metal1_4.jpg
 newmtl light3_7
 Ka 1 1 1
 Kd 1 1 1
@@ -45,7 +45,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd light3_7.jpg
+map_Kd textures/light3_7.jpg
 newmtl +lava1
 Ka 1 1 1
 Kd 1 1 1
@@ -53,7 +53,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd +lava1.jpg
+map_Kd textures/+lava1.jpg
 newmtl metal5_8
 Ka 1 1 1
 Kd 1 1 1
@@ -61,7 +61,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal5_8.jpg
+map_Kd textures/metal5_8_dm4.jpg
 newmtl sky4
 Ka 1 1 1
 Kd 1 1 1
@@ -69,7 +69,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd sky4.jpg
+map_Kd textures/sky4.jpg
 newmtl metal1_3
 Ka 1 1 1
 Kd 1 1 1
@@ -77,7 +77,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal1_3.jpg
+map_Kd textures/metal1_3.jpg
 newmtl metal6_2
 Ka 1 1 1
 Kd 1 1 1
@@ -85,7 +85,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal6_2.jpg
+map_Kd textures/metal6_2.jpg
 newmtl cop1_7
 Ka 1 1 1
 Kd 1 1 1
@@ -93,7 +93,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd cop1_7.jpg
+map_Kd textures/cop1_7.jpg
 newmtl cop3_4
 Ka 1 1 1
 Kd 1 1 1
@@ -101,7 +101,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd cop3_4.jpg
+map_Kd textures/cop3_4.jpg
 newmtl +teleport
 Ka 1 1 1
 Kd 1 1 1
@@ -109,7 +109,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd +teleport.jpg
+map_Kd textures/+teleport.jpg
 newmtl trigger
 Ka 1 1 1
 Kd 1 1 1
@@ -117,7 +117,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd trigger.jpg
+map_Kd textures/trigger.jpg
 newmtl z_exit
 Ka 1 1 1
 Kd 1 1 1
@@ -125,4 +125,4 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd z_exit.jpg
+map_Kd textures/z_exit.jpg

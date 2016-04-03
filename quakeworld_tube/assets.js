@@ -9,12 +9,12 @@ QuakeWorldTube.assets = function(options)
 			mapPath     : 'quakeworld_tube/maps/',
 			modelPath   : 'quakeworld_tube/models/',
 			soundPath   : 'quakeworld_tube/sounds/',
-			texturePath : 'quakeworld_tube/models/textures/'
 		},
 		options = core.mergeObjects(defaultOptions, options),
 
 		loader = new soda.loader(),
 		modelsToLoad = [],
+		soundsToLoad = [],
 		models = [],
 		sounds = [],
 
@@ -23,12 +23,19 @@ QuakeWorldTube.assets = function(options)
 			modelsToLoad = modelsToLoad.concat(modelList);
 		},
 
+		fillSoundList = function(soundList)
+		{
+			soundsToLoad = soundsToLoad.concat(soundList);
+		},
+
 		loadModels = function()
 		{
 
-			var loadedBytesPerModel = new Array(modelsToLoad.length),
+			var loadedBytesPerModel = Array.apply(null, Array(modelsToLoad.length)).map(Number.prototype.valueOf,0),
+				loadedTextureBytesPerModel = loadedBytesPerModel,
 				loadedModels = 0,
-				totalBytesPerModel = new Array(modelsToLoad.length),
+				totalBytesPerModel = loadedBytesPerModel,
+				totalTextureBytesPerModel = loadedBytesPerModel,
 				totalModels = modelsToLoad.length,
 
 				cube = new THREE.BoxGeometry(28, 28, 28),
@@ -36,7 +43,11 @@ QuakeWorldTube.assets = function(options)
 				overallProgress = function()
 				{
 					var loadedBytes = loadedBytesPerModel.reduce(function(a, b){return a + b}),
-						totalBytes = totalBytesPerModel.reduce(function(a, b){return a + b});
+						totalBytes = totalBytesPerModel.reduce(function(a, b){return a + b}),
+						loadedTextureBytes = loadedTextureBytesPerModel.reduce(function(a, b){return a + b}),
+						totalTextureBytes = totalTextureBytesPerModel.reduce(function(a, b){return a + b});
+
+					console.log(totalTextureBytes, loadedTextureBytes, loadedModels, totalModels);
 
 					options.onProgress(loadedBytes, totalBytes, loadedModels, totalModels);
 				},
@@ -50,14 +61,46 @@ QuakeWorldTube.assets = function(options)
 					}
 				},
 
-				loadModel = function(modelIndex, modelName, path)
+				loadMaterial = function(modelIndex, modelName, path, mtlName)
+				{
+					var loader = new THREE.MTLLoader(),
+						mtlName = mtlName || modelName,
+						onLoad = function(material)
+						{
+							material.preload();
+
+							loadModel(modelIndex, modelName, path, material);
+
+						},
+						onProgress = function(total)
+						{
+							loadedTextureBytesPerModel[modelIndex] = event.loaded;
+							totalTextureBytesPerModel[modelIndex] = event.total;
+							overallProgress();
+						},
+						onError = function()
+						{
+							console.log('Error:', modelName);
+							loadModel(modelIndex, modelName, path, null);
+						};
+
+					loader.setBaseUrl(path);
+
+					loader.load(path + mtlName + '.mtl', onLoad, onProgress, onError);
+				},
+
+				loadModel = function(modelIndex, modelName, path, material)
 				{
 					var loader = new THREE.OBJLoader(),
 						onLoad = function(object)
 						{
-							object.name = modelName;
+							var materials = [],
+								singleGeometry = new THREE.Geometry(),
+								model = new THREE.Group();
 
-							switch (object.name)
+							model.name = modelName;
+
+							switch (model.name)
 							{
 								case 'b_batt0':
 								case 'b_batt1':
@@ -70,7 +113,7 @@ QuakeWorldTube.assets = function(options)
 								case 'b_rock1':
 								case 'b_shell0':
 								case 'b_shell1':
-									object.lerp = false;
+									model.lerp = false;
 									break;
 								case 'armor_0':
 								case 'g_light':
@@ -82,27 +125,39 @@ QuakeWorldTube.assets = function(options)
 								case 'invisibl':
 								case 'invulner':
 								case 'quaddama':
-									object.lerp = false;
-									object.hover = true;
+									model.lerp = false;
+									model.hover = true;
 									break;
 								default:
-									object.lerp = true;
-									object.hover = false;
+									model.lerp = true;
+									model.hover = false;
 									break;
 							}
 
 							if (modelIndex == 1) // map
 							{
-								object.lerp = false;
+								model.lerp = false;
 							}
 
-							models[modelIndex] = object;
+							object.children.forEach(function(mesh)
+							{
+								var new_geo = new THREE.Geometry().fromBufferGeometry(mesh.geometry),
+									new_mesh = new THREE.Mesh(new_geo);
+
+								new_mesh.updateMatrix();
+								singleGeometry.merge(new_mesh.geometry, new_mesh.matrix, materials.length);
+								materials.push(mesh.material);
+							});
+
+							model.add(new THREE.Mesh(singleGeometry, new THREE.MeshFaceMaterial(materials)));
+
+							models[modelIndex] = model;
 
 							loadedModels++;
 
 							overallLoad();
 						},
-						onProgress = function()
+						onProgress = function(event)
 						{
 							loadedBytesPerModel[modelIndex] = event.loaded;
 							totalBytesPerModel[modelIndex] = event.total;
@@ -117,16 +172,19 @@ QuakeWorldTube.assets = function(options)
 							overallLoad();
 						};
 
-					if(modelIndex == 1) // map
+					if(modelIndex == 1) // map; maybe do something special?
 					{
+						loader.setMaterials(material);
 						loader.load(path + modelName + '.obj', onLoad, onProgress, onError);
 						return;
 					}
 
+					loader.setMaterials(material);
+
 					loader.load(path + modelName + '.obj', onLoad, onProgress, onError);
 				};
 
-			if(modelsToLoad.length < 1)
+			if (modelsToLoad.length < 1)
 			{
 				return;
 			}
@@ -135,38 +193,38 @@ QuakeWorldTube.assets = function(options)
 
 				index++; // Index starts at 1
 
-				if(modelName.charAt(0) == 'v') // viewmodels are skipped, maybe later
+				if (modelName.charAt(0) == 'v') // viewmodels are skipped, maybe later
 				{
 					totalModels--;
 					return;
 				}
 				
-				if(index == 1 || modelName.charAt(0) == '*') // map
+				if (index == 1 || modelName.charAt(0) == '*') // map
 				{
 					if(modelName.charAt(0) == '*') // moveable map parts
 					{
 						modelName = modelsToLoad[0] + '_' + modelName.substr(1);
 					}
 
-					loadModel(index, modelName, options.mapPath);
+					loadMaterial(index, modelName, options.mapPath, modelsToLoad[0]);
 
 					return;
 				}
 
 
-				if(modelName == 'player')
+				if (modelName == 'player')
 				{
-					loadModel(index, modelName + '_0', options.modelPath);
+					loadMaterial(index, modelName + '_0', options.modelPath, 'player');
 					return;
 				}
 
-				if(modelName == 'armor')
+				if (modelName == 'armor')
 				{
-					loadModel(index, modelName + '_0', options.modelPath);
+					loadMaterial(index, modelName + '_0', options.modelPath);
 					return;
 				}
 				
-				loadModel(index, modelName, options.modelPath);
+				loadMaterial(index, modelName, options.modelPath);
 				
 
 			});
@@ -182,6 +240,7 @@ QuakeWorldTube.assets = function(options)
 		sounds: sounds,
 
 		fillModelList: fillModelList,
+		fillSoundList: fillSoundList,
 
 		loadModels: loadModels
 	}

@@ -34,6 +34,7 @@ QuakeWorldTube.qw = function(qwTube)
 					return true; // continue
 				}
 
+
 				item.name = models[item.modelId].name;
 
 				item.lerp = models[item.modelId].lerp;
@@ -138,12 +139,14 @@ QuakeWorldTube.qw = function(qwTube)
 
 		spawnFromBaseline = function(entityId)
 		{
-			if (entities[entityId] || !baseline[entityId])
+			if ((entities[entityId] && entities[entityId].name) || !baseline[entityId])
 			{
 				return;
 			}
 
 			entities[entityId] = baseline[entityId].clone();
+
+			console.log(entities[entityId].name);
 
 			entities[entityId].lerp = baseline[entityId].lerp;
 			entities[entityId].hover = baseline[entityId].hover;

@@ -15,10 +15,10 @@ QuakeWorldTube.renderer = function(container)
 				colorRandomness: .1,
 				lifetime: 2000,
 				position: new THREE.Vector3(),
-				positionRandomness: 0,
+				positionRandomness: .1,
 				size: 5,
 				sizeRandomness: 1,
-				turbulence: .1,
+				turbulence: .5,
 				velocity: new THREE.Vector3(),
 				velocityRandomness: .01,
 			},
@@ -109,30 +109,28 @@ QuakeWorldTube.renderer = function(container)
 
 	scene.add(particleSystem);
 
-	scene.fog = new THREE.Fog( 0xffffff, 1, 5000 );
-	scene.fog.color.setHSL( 0.6, 0, 1 );
-
-	hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
-				hemiLight.color.setHSL( 0.6, 1, 0.6 );
-				hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-				hemiLight.position.set( 0, 500, 0 );
-				scene.add( hemiLight );
+	
+	hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.8 );
+	hemiLight.color.setHSL( 0.6, 1, 0.6 );
+	hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+	hemiLight.position.set( 0, 500, 0 );
+	scene.add( hemiLight );
 
 	dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
-				dirLight.color.setHSL( 0.1, 1, 0.95 );
-				dirLight.position.set( -1, 1.75, 1 );
-				dirLight.position.multiplyScalar( 50 );
-				scene.add( dirLight );
-				dirLight.castShadow = true;
-				dirLight.shadowMapWidth = 2048;
-				dirLight.shadowMapHeight = 2048;
-				var d = 50;
-				dirLight.shadowCameraLeft = -d;
-				dirLight.shadowCameraRight = d;
-				dirLight.shadowCameraTop = d;
-				dirLight.shadowCameraBottom = -d;
-				dirLight.shadowCameraFar = 3500;
-				dirLight.shadowBias = -0.0001;
+	dirLight.color.setHSL( 0.1, 1, 0.95 );
+	dirLight.position.set( -1, 1.75, 1 );
+	dirLight.position.multiplyScalar( 50 );
+	scene.add( dirLight );
+	dirLight.castShadow = true;
+	dirLight.shadow.mapSize.width = 2048;
+	dirLight.shadow.mapSize.height = 2048;
+	var d = 50;
+	dirLight.shadow.camera.left = -d;
+	dirLight.shadow.camera.right = d;
+	dirLight.shadow.camera.top = d;
+	dirLight.shadow.camera.bottom = -d;
+	dirLight.shadow.camera.far = 3500;
+	dirLight.shadow.bias = -0.0001;
 
 	//scene.add(new THREE.AmbientLight(0xffffff));
 

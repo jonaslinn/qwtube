@@ -67,8 +67,6 @@ QuakeWorldTube.init = function(container, url, options)
 	stats.domElement.style.zIndex = 1;
 
 	container.appendChild(stats.domElement);
-
-
 		
 	this.demo = {
 		duration: 0,

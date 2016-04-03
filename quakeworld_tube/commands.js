@@ -304,7 +304,8 @@ QuakeWorldTube.commands = function(qwTube)
 			coords = {
 				position: {},
 				rotation: {}
-			};
+			},
+			skin;
 
 		mvd.offset += 2;
 		mvd.msg_size -= 2;
@@ -314,8 +315,13 @@ QuakeWorldTube.commands = function(qwTube)
 		mvd.offset++;
 		mvd.msg_size--;
 
-		mvd.offset += 3;
-		mvd.msg_size -= 3;
+		mvd.offset += 2;
+		mvd.msg_size -= 2;
+
+		skin = mvd.buffer.getUint8(mvd.offset);
+
+		mvd.offset++;
+		mvd.msg_size--;
 
 		coords.position.x = mvd.buffer.getInt16(mvd.offset, true) / 8;
 
@@ -356,7 +362,7 @@ QuakeWorldTube.commands = function(qwTube)
 			coords = {
 				position: {}
 			},
-			big = false;
+			radius;
 
 		mvd.offset++;
 		mvd.msg_size--;
@@ -406,11 +412,8 @@ QuakeWorldTube.commands = function(qwTube)
 		{
 			if (tempEntity == TE_GUNSHOT || tempEntity == TE_BLOOD)
 			{
-				if (mvd.buffer.getInt8(mvd.offset) == 3)
-				{
-					big = true;
-				}
-				//big blood / big gunshot on 3?
+				radius = mvd.buffer.getInt8(mvd.offset);
+				
 				mvd.offset++;
 				mvd.msg_size--;
 			}
@@ -431,7 +434,7 @@ QuakeWorldTube.commands = function(qwTube)
 			mvd.offset += 2;
 			mvd.msg_size -= 2;
 			
-			qwTube.qw.spawnTempEntity(tempEntity, coords, big);
+			qwTube.qw.spawnTempEntity(tempEntity, coords, radius);
 		}
 
 	}
@@ -662,7 +665,7 @@ QuakeWorldTube.commands = function(qwTube)
 		mvd.offset += 2;
 		mvd.msg_size -= 2;
 
-		return soundList;
+		qwTube.assets.fillSoundList(soundList);
 	}
 
 	commands[SVC_PACKETENTITIES] = function(mvd)

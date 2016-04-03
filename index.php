@@ -65,6 +65,7 @@
 </main>
 <script src="three/three.min.js"></script>
 <script src="three/stats.min.js"></script>
+<script src="three/MTLLoader.js"></script>
 <script src="three/OBJLoader.js"></script>
 <script src="three/GPUParticleSystem.js"></script>
 <script src="javascript/core.js"></script>

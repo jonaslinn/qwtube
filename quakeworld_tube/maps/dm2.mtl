@@ -5,7 +5,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd sky4.jpg
+map_Kd textures/sky4.jpg
 newmtl metal4_4
 Ka 1 1 1
 Kd 1 1 1
@@ -13,7 +13,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal4_4.jpg
+map_Kd textures/metal4_4.jpg
 newmtl metal5_1
 Ka 1 1 1
 Kd 1 1 1
@@ -21,7 +21,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal5_1.jpg
+map_Kd textures/metal5_1.jpg
 newmtl metal2_2
 Ka 1 1 1
 Kd 1 1 1
@@ -29,7 +29,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal2_2.jpg
+map_Kd textures/metal2_2.jpg
 newmtl rune2_3
 Ka 1 1 1
 Kd 1 1 1
@@ -37,7 +37,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd rune2_3.jpg
+map_Kd textures/rune2_3.jpg
 newmtl rune1_7
 Ka 1 1 1
 Kd 1 1 1
@@ -45,7 +45,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd rune1_7.jpg
+map_Kd textures/rune1_7.jpg
 newmtl met5_1
 Ka 1 1 1
 Kd 1 1 1
@@ -53,7 +53,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd met5_1.jpg
+map_Kd textures/met5_1.jpg
 newmtl metal1_4
 Ka 1 1 1
 Kd 1 1 1
@@ -61,7 +61,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal1_4.jpg
+map_Kd textures/metal1_4.jpg
 newmtl metalt2_8
 Ka 1 1 1
 Kd 1 1 1
@@ -69,7 +69,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metalt2_8.jpg
+map_Kd textures/metalt2_8.jpg
 newmtl +lava1
 Ka 1 1 1
 Kd 1 1 1
@@ -77,7 +77,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd +lava1.jpg
+map_Kd textures/+lava1.jpg
 newmtl rune1_6
 Ka 1 1 1
 Kd 1 1 1
@@ -85,7 +85,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd rune1_6.jpg
+map_Kd textures/rune1_6.jpg
 newmtl rune1_1
 Ka 1 1 1
 Kd 1 1 1
@@ -93,7 +93,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd rune1_1.jpg
+map_Kd textures/rune1_1.jpg
 newmtl rune2_5
 Ka 1 1 1
 Kd 1 1 1
@@ -101,7 +101,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd rune2_5.jpg
+map_Kd textures/rune2_5.jpg
 newmtl metalt1_2
 Ka 1 1 1
 Kd 1 1 1
@@ -109,7 +109,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metalt1_2.jpg
+map_Kd textures/metalt1_2.jpg
 newmtl rune1_5
 Ka 1 1 1
 Kd 1 1 1
@@ -117,7 +117,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd rune1_5.jpg
+map_Kd textures/rune1_5.jpg
 newmtl rune2_4
 Ka 1 1 1
 Kd 1 1 1
@@ -125,7 +125,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd rune2_4.jpg
+map_Kd textures/rune2_4.jpg
 newmtl metal1_7
 Ka 1 1 1
 Kd 1 1 1
@@ -133,7 +133,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal1_7.jpg
+map_Kd textures/metal1_7.jpg
 newmtl +04mwat2
 Ka 1 1 1
 Kd 1 1 1
@@ -141,7 +141,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd +04mwat2.jpg
+map_Kd textures/+04mwat2.jpg
 newmtl nmetal2_1
 Ka 1 1 1
 Kd 1 1 1
@@ -149,7 +149,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd nmetal2_1.jpg
+map_Kd textures/nmetal2_1.jpg
 newmtl metal1_3
 Ka 1 1 1
 Kd 1 1 1
@@ -157,7 +157,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal1_3.jpg
+map_Kd textures/metal1_3.jpg
 newmtl +teleport
 Ka 1 1 1
 Kd 1 1 1
@@ -165,7 +165,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd +teleport.jpg
+map_Kd textures/+teleport.jpg
 newmtl trigger
 Ka 1 1 1
 Kd 1 1 1
@@ -173,7 +173,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd trigger.jpg
+map_Kd textures/trigger.jpg
 newmtl cop1_1
 Ka 1 1 1
 Kd 1 1 1
@@ -181,7 +181,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd cop1_1.jpg
+map_Kd textures/cop1_1.jpg
 newmtl mmetal1_6
 Ka 1 1 1
 Kd 1 1 1
@@ -189,7 +189,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd mmetal1_6.jpg
+map_Kd textures/mmetal1_6.jpg
 newmtl rune2_2
 Ka 1 1 1
 Kd 1 1 1
@@ -197,7 +197,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd rune2_2.jpg
+map_Kd textures/rune2_2.jpg
 newmtl met5_2
 Ka 1 1 1
 Kd 1 1 1
@@ -205,7 +205,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd met5_2.jpg
+map_Kd textures/met5_2.jpg
 newmtl muh_bad
 Ka 1 1 1
 Kd 1 1 1
@@ -213,7 +213,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd muh_bad.jpg
+map_Kd textures/muh_bad.jpg
 newmtl metal4_5
 Ka 1 1 1
 Kd 1 1 1
@@ -221,7 +221,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal4_5.jpg
+map_Kd textures/metal4_5.jpg
 newmtl rune2_1
 Ka 1 1 1
 Kd 1 1 1
@@ -229,7 +229,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd rune2_1.jpg
+map_Kd textures/rune2_1.jpg
 newmtl metalt2_3
 Ka 1 1 1
 Kd 1 1 1
@@ -237,7 +237,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metalt2_3.jpg
+map_Kd textures/metalt2_3.jpg
 newmtl cop3_4
 Ka 1 1 1
 Kd 1 1 1
@@ -245,7 +245,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd cop3_4.jpg
+map_Kd textures/cop3_4.jpg
 newmtl mmetal1_2
 Ka 1 1 1
 Kd 1 1 1
@@ -253,7 +253,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd mmetal1_2.jpg
+map_Kd textures/mmetal1_2.jpg
 newmtl met5_3
 Ka 1 1 1
 Kd 1 1 1
@@ -261,7 +261,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd met5_3.jpg
+map_Kd textures/met5_3.jpg
 newmtl metalt2_1
 Ka 1 1 1
 Kd 1 1 1
@@ -269,7 +269,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metalt2_1.jpg
+map_Kd textures/metalt2_1.jpg
 newmtl metal4_3
 Ka 1 1 1
 Kd 1 1 1
@@ -277,7 +277,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd metal4_3.jpg
+map_Kd textures/metal4_3.jpg
 newmtl plat_top2
 Ka 1 1 1
 Kd 1 1 1
@@ -285,7 +285,7 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd plat_top2.jpg
+map_Kd textures/plat_top2.jpg
 newmtl z_exit
 Ka 1 1 1
 Kd 1 1 1
@@ -293,4 +293,4 @@ Ks 0 0 0
 Tr 1
 illum 1
 Ns 0
-map_Kd z_exit.jpg
+map_Kd textures/z_exit.jpg

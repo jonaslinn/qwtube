@@ -47,6 +47,7 @@ THREE.OBJLoader.prototype = {
 		var objects = [];
 		var object;
 		var foundObjects = false;
+		var foundFaces = false;
 		var vertices = [];
 		var normals = [];
 		var uvs = [];
@@ -129,6 +130,8 @@ THREE.OBJLoader.prototype = {
 		}
 
 		function addFace( a, b, c, d,  ua, ub, uc, ud, na, nb, nc, nd ) {
+
+			foundFaces = true;
 
 			var ia = parseVertexIndex( a );
 			var ib = parseVertexIndex( b );
@@ -310,18 +313,31 @@ THREE.OBJLoader.prototype = {
 
 				if ( foundObjects === false ) {
 
+					// If this is the first object, then we'll modify the default 'empty' object we created
 					foundObjects = true;
 					object.name = name;
 
 				} else {
 
+					// Otherwise, create a new object with the given name and set it as the 'active' object.
 					addObject( name );
 
 				}
 
+				foundFaces = false;
+
 			} else if ( /^usemtl /.test( line ) ) {
 
 				// material
+
+				if (foundFaces === true) {
+					// This means we have already defined faces for the current object so we save the current
+					// object and create a new one to assign the new material.  It will use most of the same 
+					// geometry as the previous object and just uses any new faces that are defined.
+					// Use the same name, hopefully that's okay.
+					addObject(object.Name)
+					foundFaces = false;
+				} 
 
 				object.material.name = line.substring( 7 ).trim();
 
