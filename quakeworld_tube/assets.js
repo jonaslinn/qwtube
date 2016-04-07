@@ -96,6 +96,7 @@ QuakeWorldTube.assets = function(options)
 						{
 							var materials = [],
 								singleGeometry = new THREE.Geometry(),
+								singleGeometry2 = new THREE.BufferGeometry(),
 								model = new THREE.Group();
 
 							model.name = modelName;
@@ -134,11 +135,6 @@ QuakeWorldTube.assets = function(options)
 									break;
 							}
 
-							if (modelIndex == 1) // map
-							{
-								model.lerp = false;
-							}
-
 							object.children.forEach(function(mesh)
 							{
 								var new_geo = new THREE.Geometry().fromBufferGeometry(mesh.geometry),
@@ -149,7 +145,28 @@ QuakeWorldTube.assets = function(options)
 								materials.push(mesh.material);
 							});
 
-							model.add(new THREE.Mesh(singleGeometry, new THREE.MeshFaceMaterial(materials)));
+							if (modelIndex == 1) // map
+							{
+								model.lerp = false;
+								
+								model.add(new THREE.Mesh(singleGeometry, new THREE.MeshLambertMaterial({color: 0x333333})));
+							}
+							else
+							{
+								model.add(new THREE.Mesh(singleGeometry, new THREE.MeshFaceMaterial(materials)));
+							}
+
+							
+
+
+							/*object.children.forEach(function(mesh)
+							{
+								singleGeometry2.merge(mesh.geometry);
+								materials.push(mesh.material);
+							});*/
+							//model.add(new THREE.Mesh(singleGeometry2, new THREE.MeshNormalMaterial()));
+							console.log(model);
+							console.log(object);
 
 							models[modelIndex] = model;
 
