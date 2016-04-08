@@ -264,8 +264,8 @@ QuakeWorldTube.qw = function(qwTube)
 
 				if (entity.hover)
 				{
-					entity.position.z += (0.25 * Math.sin(time * 0.005)) * qwTube.demo.speed;
-					entity.rotation.z += 0.0075 * qwTube.demo.speed;
+					entity.position.z += (0.25 * Math.sin(time * 0.004)) * qwTube.demo.speed;
+					entity.rotation.z += 0.025 * qwTube.demo.speed;
 				}
 			});
 
