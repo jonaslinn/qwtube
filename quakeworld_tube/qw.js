@@ -191,6 +191,11 @@ QuakeWorldTube.qw = function(qwTube)
 			qwTube.renderer.fireParticles('missile', coords.position);
 		},
 
+		intermission = function(coords)
+		{
+			qwTube.renderer.updateCameraPosition(coords);
+		},
+
 		removeEntity = function(entityId)
 		{
 			qwTube.renderer.scene.remove(entities[entityId]);
@@ -300,6 +305,7 @@ QuakeWorldTube.qw = function(qwTube)
 		spawnBaseline: spawnBaseline,
 		spawnEntity: spawnEntity,
 		spawnTempEntity: spawnTempEntity,
+		intermission: intermission,
 		spawnStatic: spawnStatic,
 		spawnFromBaseline: spawnFromBaseline,
 		switchPlayer: switchPlayer,

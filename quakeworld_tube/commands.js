@@ -458,8 +458,42 @@ QuakeWorldTube.commands = function(qwTube)
 
 	commands[SVC_INTERMISSION] = function(mvd)
 	{
-		mvd.offset += 9;
-		mvd.msg_size -= 9;
+		var coords = {
+			'position': {},
+			'rotation': {}
+		};
+
+		coords.position.x = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+		mvd.offset += 2;
+		mvd.msg_size -= 2;
+
+		coords.position.y = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+		mvd.offset += 2;
+		mvd.msg_size -= 2;
+
+		coords.position.z = mvd.buffer.getInt16(mvd.offset, true) / 8;
+
+		mvd.offset += 2;
+		mvd.msg_size -= 2;
+
+		coords.rotation.x = (360 * mvd.buffer.getUint8(mvd.offset) / 256) * Math.PI / 180;
+
+		mvd.offset++;
+		mvd.msg_size--;
+
+		coords.rotation.z = (360 * mvd.buffer.getUint8(mvd.offset) / 256) * Math.PI / 180;
+
+		mvd.offset++;
+		mvd.msg_size--;
+
+		coords.rotation.y = (360 * mvd.buffer.getUint8(mvd.offset) / 256) * Math.PI / 180;
+
+		mvd.offset++;
+		mvd.msg_size--;
+
+		qwTube.qw.intermission(coords);
 	}
 
 	commands[SVC_FINALE] = function(){}
