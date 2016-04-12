@@ -86,8 +86,23 @@ QuakeWorldTube.renderer = function(container)
 	    	onResize();
 	    }
 
-	    updateCameraPosition = function(coords)
+	    updateCameraPosition = function(coords, intermission = false, time = 0)
 	    {
+		if (intermission)
+		{
+			camera.position.copy(coords.position);
+			camera.rotation_intermission = coords.rotation;
+		}
+		
+		if (camera.rotation_intermission)
+		{
+			camera.rotation.x = Math.PI/2 - camera.rotation_intermission.x + 0.1 * Math.sin(time * 0.0005);
+			camera.rotation.y = camera.rotation_intermission.y + 0.05 * Math.sin(time * 0.0001);
+			camera.rotation.z = -Math.PI/2 + camera.rotation_intermission.z + 0.1 * Math.sin(time * 0.001);
+			
+			return;
+		}
+
 	    	camera.position.copy(coords.position);
 	    	camera.position.z += 20;   	//move the camera from the belly button to the eyes 
 

@@ -193,7 +193,7 @@ QuakeWorldTube.qw = function(qwTube)
 
 		intermission = function(coords)
 		{
-			qwTube.renderer.updateCameraPosition(coords);
+			qwTube.renderer.updateCameraPosition(coords, true);
 		},
 
 		removeEntity = function(entityId)
