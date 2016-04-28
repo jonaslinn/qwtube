@@ -50,7 +50,7 @@ QuakeWorldTube.init = function(container, url, options)
 
 			qwTube.qw.updateEntities(fac, qwTube.demo.time, qwTube.demo.time - previousTimestamp);
 
-			qwTube.renderer.updateCameraPosition(qwTube.qw.getPlayerCoords());
+			qwTube.renderer.updateCameraPosition(qwTube.qw.getPlayerCoords(), false, timestamp);
 
 			qwTube.renderer.particleSystem.update(qwTube.demo.time);
 
