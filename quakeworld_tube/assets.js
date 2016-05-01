@@ -13,6 +13,7 @@ QuakeWorldTube.assets = function(options)
 		options = core.mergeObjects(defaultOptions, options),
 
 		loader = new soda.loader(),
+		requests = [],
 		modelsToLoad = [],
 		soundsToLoad = [],
 		models = [],
@@ -26,6 +27,13 @@ QuakeWorldTube.assets = function(options)
 		fillSoundList = function(soundList)
 		{
 			soundsToLoad = soundsToLoad.concat(soundList);
+		},
+
+		shutdown = function()
+		{
+			requests.forEach(function(request){
+				request.abort();
+			});
 		},
 
 		loadModels = function()
@@ -54,10 +62,11 @@ QuakeWorldTube.assets = function(options)
 
 				overallLoad = function()
 				{
-					if(loadedModels == totalModels)
+					if(loadedModels >= totalModels)
 					{
 						//console.log(models);
 						options.onLoad();
+						console.log(requests);
 					}
 				},
 
@@ -86,7 +95,7 @@ QuakeWorldTube.assets = function(options)
 
 					loader.setBaseUrl(path);
 
-					loader.load(path + mtlName + '.mtl', onLoad, onProgress, onError);
+					requests.push(loader.load(path + mtlName + '.mtl', onLoad, onProgress, onError));
 				},
 
 				loadModel = function(modelIndex, modelName, path, material)
@@ -198,7 +207,7 @@ QuakeWorldTube.assets = function(options)
 
 					loader.setMaterials(material);
 
-					loader.load(path + modelName + '.obj', onLoad, onProgress, onError);
+					requests.push(loader.load(path + modelName + '.obj', onLoad, onProgress, onError));
 				};
 
 			if (modelsToLoad.length < 1)
@@ -228,7 +237,6 @@ QuakeWorldTube.assets = function(options)
 					return;
 				}
 
-
 				if (modelName == 'player')
 				{
 					loadMaterial(index, modelName + '_0', options.modelPath, 'player');
@@ -243,10 +251,7 @@ QuakeWorldTube.assets = function(options)
 				
 				loadMaterial(index, modelName, options.modelPath);
 				
-
 			});
-
-
 
 			options.onLoadStart();
 
@@ -259,7 +264,9 @@ QuakeWorldTube.assets = function(options)
 		fillModelList: fillModelList,
 		fillSoundList: fillSoundList,
 
-		loadModels: loadModels
+		loadModels: loadModels,
+
+		shutdown: shutdown
 	}
 
 }

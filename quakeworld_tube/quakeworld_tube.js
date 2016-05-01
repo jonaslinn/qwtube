@@ -29,6 +29,8 @@ QuakeWorldTube.init = function(container, url, options)
 
 		qwTube = this,
 
+		requestAnimationFrameId,
+
 		loop = function(timestamp)
 		{
 			var messages = [],
@@ -38,7 +40,7 @@ QuakeWorldTube.init = function(container, url, options)
 
 			stats.begin();
 
-			requestAnimationFrame(loop);
+			requestAnimationFrameId = requestAnimationFrame(loop);
 
 			if(!timer.updateTime(timestamp))
 			{
@@ -58,6 +60,13 @@ QuakeWorldTube.init = function(container, url, options)
 
 			stats.end();
 		};
+
+	this.shutdown = function()
+	{
+		cancelAnimationFrame(requestAnimationFrameId);
+		this.assets.shutdown();
+		this.renderer.shutdown();
+	};
 
 	stats.setMode(0); // 0: fps, 1: ms, 2: mb
 
